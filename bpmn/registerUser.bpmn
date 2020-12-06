@@ -26,9 +26,7 @@
     <bpmn:scriptTask id="Activity_0plws1t" name="Create user" scriptFormat="JavaScript">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
-          <camunda:script scriptFormat="JavaScript">execution.setVariable("dummy",org.camunda.spin.Spin.JSON(dummyJSON));
-
-execution.setVariable("dummyName", dummy.prop("name"))</camunda:script>
+          <camunda:script scriptFormat="JavaScript"></camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0qoq42q</bpmn:incoming>
@@ -64,6 +62,10 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "rea
   <bpmn:message id="Message_0lv13aj" name="ActivationLinkClicked" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registerReader">
+      <bpmndi:BPMNEdge id="Flow_0qpgcb3_di" bpmnElement="Flow_0qpgcb3">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="580" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0qoq42q_di" bpmnElement="Flow_0qoq42q">
         <di:waypoint x="188" y="120" />
         <di:waypoint x="250" y="120" />
@@ -71,10 +73,6 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "rea
       <bpmndi:BPMNEdge id="Flow_1tcd3k1_di" bpmnElement="Flow_1tcd3k1">
         <di:waypoint x="680" y="120" />
         <di:waypoint x="742" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0qpgcb3_di" bpmnElement="Flow_0qpgcb3">
-        <di:waypoint x="510" y="120" />
-        <di:waypoint x="580" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1szevri_di" bpmnElement="Flow_1szevri">
         <di:waypoint x="350" y="120" />

@@ -11,6 +11,13 @@
           <camunda:formField id="email" label="Email" type="string" />
           <camunda:formField id="betaReader" label="Beta Reader" type="boolean" />
         </camunda:formData>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="JavaScript">if(execution.getVariable("genres") !== null){
+execution.setVariable("genresJSON",org.camunda.spin.Spin.JSON(genres));
+}
+
+</camunda:script>
+        </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0qoq42q</bpmn:outgoing>
     </bpmn:startEvent>
@@ -24,13 +31,6 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0x2pp01" sourceRef="Activity_1awtkz1" targetRef="Event_15iinxj" />
     <bpmn:scriptTask id="Activity_0plws1t" name="Create user" scriptFormat="JavaScript">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="start">
-          <camunda:script scriptFormat="JavaScript">execution.setVariable("dummy",org.camunda.spin.Spin.JSON(dummyJSON));
-
-execution.setVariable("dummyName", dummy.prop("name"))</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0qoq42q</bpmn:incoming>
       <bpmn:outgoing>Flow_1szevri</bpmn:outgoing>
       <bpmn:script>var user = execution.getProcessEngine().getIdentityService().newUser(username);
@@ -64,6 +64,10 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "rea
   <bpmn:message id="Message_0lv13aj" name="ActivationLinkClicked" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registerReader">
+      <bpmndi:BPMNEdge id="Flow_0qpgcb3_di" bpmnElement="Flow_0qpgcb3">
+        <di:waypoint x="510" y="120" />
+        <di:waypoint x="580" y="120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0qoq42q_di" bpmnElement="Flow_0qoq42q">
         <di:waypoint x="188" y="120" />
         <di:waypoint x="250" y="120" />
@@ -71,10 +75,6 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "rea
       <bpmndi:BPMNEdge id="Flow_1tcd3k1_di" bpmnElement="Flow_1tcd3k1">
         <di:waypoint x="680" y="120" />
         <di:waypoint x="742" y="120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0qpgcb3_di" bpmnElement="Flow_0qpgcb3">
-        <di:waypoint x="510" y="120" />
-        <di:waypoint x="580" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1szevri_di" bpmnElement="Flow_1szevri">
         <di:waypoint x="350" y="120" />

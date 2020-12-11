@@ -1,6 +1,6 @@
-import React, { SyntheticEvent } from 'react';
-import { FormVariables } from '../interfaces';
-import GenericFormField from './GenericFormField';
+import React, { SyntheticEvent } from "react";
+import { FormVariables } from "../interfaces";
+import GenericFormField from "./GenericFormField";
 
 interface GenericFormProps {
   setFormState: any;
@@ -14,21 +14,26 @@ const GenericForm: React.FC<GenericFormProps> = ({
   setFormState,
   handleSubmit,
 }) => {
-  const handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (name: string) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     let value: any;
     switch (e.target.type) {
-      case 'text':
-      case 'password':
+      case "text":
+      case "password":
         value = e.target.value;
         break;
-      case 'checkbox':
+      case "checkbox":
         value = e.target.checked;
         break;
       default:
     }
     setFormState({
       ...formState,
-      variables: { ...formState.variables, [name]: { ...formState.variables[name], value: value } },
+      variables: {
+        ...formState.variables,
+        [name]: { ...formState.variables[name], value: value },
+      },
     });
   };
 
@@ -40,9 +45,9 @@ const GenericForm: React.FC<GenericFormProps> = ({
       label: formState.variables[key].label,
       name: formState.variables[key].name,
       value: formState.variables[key].value,
+      constraints: formState.variables[key].constraints,
     });
   }
-
   return (
     <form onSubmit={handleSubmit}>
       {fields.map((formField, i) => (
@@ -53,10 +58,11 @@ const GenericForm: React.FC<GenericFormProps> = ({
           value={formField.value}
           name={formField.name}
           onChange={handleChange(formField.name)}
+          constraints={formField.constraints}
         />
       ))}
       {children}
-      <button type='submit'>Register</button>
+      <button type="submit">Register</button>
     </form>
   );
 };

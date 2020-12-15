@@ -1,10 +1,10 @@
 module.exports = {
-  type: "postgres",
-  host: "localhost",
+  type: 'postgres',
+  host: 'localhost',
   port: 5432,
-  username: "postgres",
-  password: "admin",
-  database: "UPP",
-  entities: ["src/entities/*.ts"],
+  username: 'postgres',
+  password: 'root',
+  database: 'UPP',
+  entities: ['src/entities/*.ts'],
   synchronize: true,
 };

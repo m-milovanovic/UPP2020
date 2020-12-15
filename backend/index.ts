@@ -1,12 +1,18 @@
 import express from "express";
+
 import dotenv from "dotenv";
 import cors from "cors";
 import Axios from "axios";
 
 dotenv.config();
+
+import { start } from "./workers/RegisterProcessWorker"
+
+
 const app = express();
 app.use(cors());
 app.use(express.json());
+start()
 
 const PORT = process.env.PORT;
 const CAMUNDA_REST = process.env.CAMUNDA_REST;
@@ -66,6 +72,11 @@ app.post("/process/:id/submit-form", async (req, res) => {
   } catch (error) {
     res.status(400).json(error).end();
   }
+});
+
+app.post("/send-activation-mail", async (_: any, res) => {
+  //MailService.send("uxkikwvghyecsqqvog@wqcefp.com", "dsa")
+  res.json("OK")
 });
 
 app.listen(PORT, () => {

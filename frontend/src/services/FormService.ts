@@ -1,20 +1,20 @@
-import Axios from "axios";
-import { FormVariables } from "../interfaces";
+import Axios from 'axios';
+import { FormVariables } from '../interfaces';
 
 const getFormVariables = async (processKey: string): Promise<FormVariables> => {
   const response = await Axios.get(
     `${process.env.REACT_APP_API_URL}/process/${processKey}/form-variables`
   );
   let formVariables: FormVariables = { variables: {} };
-  for (const key in response.data) {
-    formVariables.variables[key] = {
-      type: response.data[key].type,
-      label: key,
-      name: key,
-      value: "",
-      constraints: response.data[key].constraints,
+  response.data.forEach((variable: any) => {
+    formVariables.variables[variable.name] = {
+      inputType: variable.type,
+      label: variable.label,
+      value: '',
+      name: variable.name,
+      constraints: variable.constraints,
     };
-  }
+  });
   return formVariables;
 };
 
@@ -33,7 +33,7 @@ const getRenderedForm = async (processKey: string): Promise<string> => {
 const FormService = {
   getFormVariables,
   getGenres,
-  getRenderedForm
+  getRenderedForm,
 };
 
 export default FormService;

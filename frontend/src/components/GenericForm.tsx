@@ -1,11 +1,13 @@
-import React, { SyntheticEvent } from "react";
-import { FormVariables } from "../interfaces";
-import GenericFormField from "./GenericFormField";
+import React, { SyntheticEvent } from 'react';
+import { FormVariables } from '../interfaces';
+import GenericFormField from './GenericFormField';
 
 interface GenericFormProps {
   setFormState: any;
   formState: FormVariables;
   handleSubmit: (e: SyntheticEvent) => void;
+  selectOptions?: string[];
+  buttonName: string
 }
 
 const GenericForm: React.FC<GenericFormProps> = ({
@@ -13,21 +15,10 @@ const GenericForm: React.FC<GenericFormProps> = ({
   formState,
   setFormState,
   handleSubmit,
+  selectOptions,
+  buttonName
 }) => {
-  const handleChange = (name: string) => (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    let value: any;
-    switch (e.target.type) {
-      case "text":
-      case "password":
-        value = e.target.value;
-        break;
-      case "checkbox":
-        value = e.target.checked;
-        break;
-      default:
-    }
+  const handleSetState = (name: string, value: any) => {
     setFormState({
       ...formState,
       variables: {
@@ -38,31 +29,26 @@ const GenericForm: React.FC<GenericFormProps> = ({
   };
 
   const fields = [];
-
   for (const key in formState.variables) {
-    fields.push({
-      type: formState.variables[key].type,
-      label: formState.variables[key].label,
-      name: formState.variables[key].name,
-      value: formState.variables[key].value,
-      constraints: formState.variables[key].constraints,
-    });
+    fields.push({ ...formState.variables[key] });
   }
+  
   return (
     <form onSubmit={handleSubmit}>
       {fields.map((formField, i) => (
         <GenericFormField
           key={i}
-          type={formField.type}
+          inputType={formField.inputType}
           label={formField.label}
           value={formField.value}
           name={formField.name}
-          onChange={handleChange(formField.name)}
           constraints={formField.constraints}
+          setFormState={handleSetState}
+          selectOptions={selectOptions}
         />
       ))}
       {children}
-      <button type="submit">Register</button>
+      <button type='submit'>{buttonName}</button>
     </form>
   );
 };

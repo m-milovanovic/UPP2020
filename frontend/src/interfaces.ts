@@ -3,11 +3,15 @@ export interface FormVariables {
 }
 
 export interface FormVariable {
-  value: any;
-  type?: string;
-  name: string;
+  inputType: string;
   label: string;
-  constraints?: Constraints;
+  name: string;
+  constraints: Constraints;
+  value: any;
 }
 
-export type Constraints = Record<string, string | boolean | undefined>
+export interface FormVariablePOST {
+  value: any;
+}
+
+export type Constraints = Record<string, string | boolean | undefined>;

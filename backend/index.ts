@@ -1,0 +1,84 @@
+import express from "express";
+
+import dotenv from "dotenv";
+import cors from "cors";
+import Axios from "axios";
+
+dotenv.config();
+
+import { start } from "./workers/RegisterProcessWorker"
+
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+start()
+
+const PORT = process.env.PORT;
+const CAMUNDA_REST = process.env.CAMUNDA_REST;
+
+app.get("/ping", (_req, res) => {
+  console.log("someone pinged here");
+  res.send("pong");
+});
+
+app.get("/process/:id/form-variables", async (req, res) => {
+  try {
+    const result = await Axios.get(
+      `${CAMUNDA_REST}/process-definition/key/${req.params.id}/form-variables`
+    );
+    if (result.data.password) {
+      result.data.password = { ...result.data.password, type: "Password" };
+    }
+    if (result.data.email) {
+      result.data.email = { ...result.data.email, type: "Email" };
+    }
+    res.json(result.data);
+  } catch (error) {
+    res.status(400).json(error).end();
+  }
+});
+
+app.get("/process/:id/rendered-form", async (req, res) => {
+  try {
+    const result = await Axios.get(
+      `${CAMUNDA_REST}/process-definition/key/${req.params.id}/rendered-form`
+    );
+    res.json(result.data);
+  } catch (error) {
+    res.status(400).json(error).end();
+  }
+});
+
+app.get("/genres", async (_req, res) => {
+  const genres = ["SciFi", "Fantasy", "Economics", "Science"];
+  res.json(genres);
+});
+
+app.post("/process/:id/submit-form", async (req, res) => {
+  const body = req.body;
+  const options = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const result = await Axios.post(
+      `${CAMUNDA_REST}/process-definition/key/${req.params.id}/submit-form`,
+      body,
+      options
+    );
+    res.json(result.data);
+  } catch (error) {
+    res.status(400).json(error).end();
+  }
+});
+
+app.post("/send-activation-mail", async (_: any, res) => {
+  //MailService.send("uxkikwvghyecsqqvog@wqcefp.com", "dsa")
+  res.json("OK")
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

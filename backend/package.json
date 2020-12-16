@@ -20,7 +20,8 @@
     "express": "^4.17.1",
     "pg": "^8.5.1",
     "ts-node-dev": "^1.0.0",
-    "typeorm": "^0.2.29"
+    "typeorm": "^0.2.29",
+    "nodemailer": "^6.4.17"
   },
   "devDependencies": {
     "@types/camunda-external-task-client-js": "^1.3.1",

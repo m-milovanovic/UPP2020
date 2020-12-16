@@ -14,4 +14,4 @@ export interface FormVariablePOST {
   value: any;
 }
 
-export type Constraints = Record<string, string | boolean | undefined>;
+export type Constraints = Record<string, string[] | string | undefined >;

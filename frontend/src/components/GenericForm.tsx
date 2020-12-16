@@ -6,7 +6,6 @@ interface GenericFormProps {
   setFormState: any;
   formState: FormVariables;
   handleSubmit: (e: SyntheticEvent) => void;
-  selectOptions?: string[];
   buttonName: string
 }
 
@@ -15,7 +14,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
   formState,
   setFormState,
   handleSubmit,
-  selectOptions,
   buttonName
 }) => {
   const handleSetState = (name: string, value: any) => {
@@ -44,7 +42,6 @@ const GenericForm: React.FC<GenericFormProps> = ({
           name={formField.name}
           constraints={formField.constraints}
           setFormState={handleSetState}
-          selectOptions={selectOptions}
         />
       ))}
       {children}

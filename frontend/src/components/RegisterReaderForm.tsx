@@ -6,14 +6,26 @@ import GenericForm from './GenericForm';
 
 const RegisterReaderForm: React.FC = () => {
   const [formState, setFormState] = useState<FormVariables>({ variables: {} });
-  const [genres, setGenres] = useState<string[]>([]);
 
   useEffect(() => {
     const getFormVariables = async () => {
       setFormState(await FormService.getFormVariables('registerReader'));
     };
     const getGenres = async () => {
-      setGenres(await FormService.getGenres());
+      const genres: string[] = await FormService.getGenres();
+      setFormState({
+        ...formState,
+        variables: {
+          ...formState.variables,
+          genres: {
+            ...formState.variables.genres,
+            constraints: {
+              ...formState.variables.genres.constraints,
+              options: genres,
+            },
+          },
+        },
+      });
     };
     getFormVariables();
     getGenres();
@@ -30,7 +42,6 @@ const RegisterReaderForm: React.FC = () => {
         formState={formState}
         setFormState={setFormState}
         handleSubmit={handleSubmit}
-        selectOptions={genres}
         buttonName='Register'
       />
     </div>

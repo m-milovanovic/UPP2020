@@ -305,8 +305,8 @@ execution.setVariable('votes', votes);</camunda:script>
       <bpmn:outgoing>Flow_1gh9geg</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_06493ot" sourceRef="Gateway_0hust52" targetRef="Activity_1jv6toh" />
-    <bpmn:sequenceFlow id="Flow_1gh9geg" name="papers.size() &#60; 2" sourceRef="Gateway_0hust52" targetRef="Gateway_0uyjviw">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${papers.size() &lt; 2}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1gh9geg" name="papers.size() &#60; 2 || continue==false" sourceRef="Gateway_0hust52" targetRef="Gateway_0uyjviw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${papers.size() &lt; 2 || continue &lt;}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_147xv4s" sourceRef="FillDataWriter" targetRef="Activity_07uoy03" />
     <bpmn:userTask id="FillDataWriter" name="Fill data">
@@ -334,7 +334,7 @@ execution.setVariable('votes', votes);</camunda:script>
         <di:waypoint x="1188" y="130" />
         <di:waypoint x="1188" y="225" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1287" y="112" width="83" height="14" />
+          <dc:Bounds x="1284" y="90" width="87" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_06493ot_di" bpmnElement="Flow_06493ot">

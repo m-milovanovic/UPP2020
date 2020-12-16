@@ -1,39 +1,35 @@
-import Axios from "axios";
-import { FormVariables } from "../interfaces";
+import Axios from 'axios';
+import { FormVariables } from '../interfaces';
+
+const startProcess = async (processKey: string): Promise<string> => {
+  // ovde se startuje proces i vraca se processId 
+  return '12141414';
+};
 
 const getFormVariables = async (processKey: string): Promise<FormVariables> => {
-  const response = await Axios.get(
-    `${process.env.REACT_APP_API_URL}/process/${processKey}/form-variables`
-  );
+  //ovde treba da bude taskId
+  const response = await Axios.post(`${process.env.REACT_APP_API_URL}/api/${processKey}`);
   let formVariables: FormVariables = { variables: {} };
-  for (const key in response.data) {
-    formVariables.variables[key] = {
-      type: response.data[key].type,
-      label: key,
-      name: key,
-      value: "",
-      constraints: response.data[key].constraints,
+
+  response.data.properties.forEach((variable: any) => {
+    formVariables.variables[variable.name] = {
+      inputType: variable.inputType,
+      label: variable.label,
+      value: '',
+      name: variable.name,
+      constraints: variable.constraints,
+      options: variable.options,
     };
-  }
+  });
+
+  //LocalStorageService.setTaskId(response.data.taskId);
+
   return formVariables;
 };
 
-const getGenres = async (): Promise<string[]> => {
-  const response = await Axios.get(`${process.env.REACT_APP_API_URL}/genres`);
-  return response.data;
-};
-
-const getRenderedForm = async (processKey: string): Promise<string> => {
-  const response = await Axios.get(
-    `${process.env.REACT_APP_API_URL}/process/${processKey}/rendered-form`
-  );
-  return response.data;
-};
-
 const FormService = {
+  startProcess,
   getFormVariables,
-  getGenres,
-  getRenderedForm
 };
 
 export default FormService;

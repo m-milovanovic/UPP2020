@@ -7,6 +7,7 @@ export interface GenericFormFieldProps {
   value: any;
   name: string;
   constraints?: Constraints;
+  options?: any[];
   setFormState: (name: string, value: any) => void;
 }
 
@@ -16,6 +17,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
   value,
   name,
   constraints,
+  options,
   setFormState,
 }) => {
   const onChange = (e: React.ChangeEvent) => {
@@ -78,10 +80,10 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
       )}
       {inputType === 'multiselect' && (
         <label>
-          {label}
+          {label}<br/>
           <select name={name} multiple onChange={onChange} {...constraints}>
-            {(constraints?.options as string[]).map((opt, i) => (
-              <option key={i} value={opt}>
+            {options?.map((opt, i) => (
+              <option key={`multiselect-opt-${i}`} value={opt}>
                 {opt}
               </option>
             ))}

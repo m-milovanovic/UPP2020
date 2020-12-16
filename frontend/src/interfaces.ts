@@ -2,16 +2,19 @@ export interface FormVariables {
   variables: Record<string, FormVariable>;
 }
 
-export interface FormVariable {
+export interface FormVariablesPOST {
+  variables: Record<string, FormVariablePOST>;
+}
+
+export type FormVariable = {
   inputType: string;
   label: string;
   name: string;
   constraints: Constraints;
   value: any;
-}
+  options?: any[];
+};
 
-export interface FormVariablePOST {
-  value: any;
-}
+export type FormVariablePOST = Pick<FormVariable, 'value'>;
 
-export type Constraints = Record<string, string[] | string | undefined >;
+export type Constraints = Record<string, string[] | undefined>;

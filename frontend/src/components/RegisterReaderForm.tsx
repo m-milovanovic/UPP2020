@@ -1,39 +1,30 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { FormVariables } from '../interfaces';
-import FormService from '../services/FormService';
-import UserService from '../services/UserService';
+import LocalStorageService from '../services/LocalStorageService';
+import ProcessService from '../services/ProcessService';
+import TaskService from '../services/TaskService';
 import GenericForm from './GenericForm';
 
 const RegisterReaderForm: React.FC = () => {
   const [formState, setFormState] = useState<FormVariables>({ variables: {} });
+  const [taskId, setTaskId] = useState<string>('');
 
   useEffect(() => {
     const getFormVariables = async () => {
-      setFormState(await FormService.getFormVariables('registerReader'));
-    };
-    const getGenres = async () => {
-      const genres: string[] = await FormService.getGenres();
-      setFormState({
-        ...formState,
-        variables: {
-          ...formState.variables,
-          genres: {
-            ...formState.variables.genres,
-            constraints: {
-              ...formState.variables.genres.constraints,
-              options: genres,
-            },
-          },
-        },
-      });
+      let processId = LocalStorageService.getProcessId();
+      if (processId === null || processId === 'undefined') {
+        processId = await ProcessService.startProcess('registerReader');
+      }
+      let activeTaskId = await ProcessService.getActiveTaskId(processId);
+      setFormState(await TaskService.getTaskFormVariables(activeTaskId));
+      setTaskId(activeTaskId);
     };
     getFormVariables();
-    getGenres();
   }, []);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await UserService.registerReader(formState, 'registerReader');
+    await TaskService.completeTask(taskId, formState);
   };
 
   return (
@@ -42,7 +33,6 @@ const RegisterReaderForm: React.FC = () => {
         formState={formState}
         setFormState={setFormState}
         handleSubmit={handleSubmit}
-        buttonName='Register'
       />
     </div>
   );

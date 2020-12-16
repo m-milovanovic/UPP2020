@@ -1,7 +1,6 @@
 import express from 'express';
-import ProcessDefinition from '../../camunda-engine/ProcessDefinition';
-import ProcessInstance from '../../camunda-engine/ProcessInstance';
 import Task from '../../camunda-engine/Task';
+import VariableInstance from '../../camunda-engine/VariableInstance';
 
 const router = express.Router();
 
@@ -14,22 +13,19 @@ interface FormVariable {
   constraints: Constraints;
 }
 
-router.post('', async (_, response) => {
-  const key = 'registerReader';
-  const processInstanceInfo = await ProcessDefinition.startProcessInstance(key);
-  const processInstanceID = processInstanceInfo.id;
-  // only one task of this kind will exsist
-  //const taskID = (await Task.getTask(processInstanceID, 'FillDataReader'))[0].id;
-  const taskID = (await Task.getTask(processInstanceID))[0].id;
-  const fieldsObject = await ProcessInstance.getVariable(processInstanceID, taskID);
+router.get('/:id/formVariables', async (request, response) => {
+  const taskID = request.params.id;
+  const fieldsObject = await VariableInstance.getVariable(taskID);
   fieldsObject.value = fieldsObject.value.replaceAll('"', '"');
   const retVal = tranformStringToFormVariable(fieldsObject.value);
-  response.json({ taskID, properties: retVal });
+  response.json(retVal);
 });
 
-router.post('complete', async (request, _) => {
-  const body = request.body;
-  console.log(body.variables);
+router.post('/:id/complete', async (request, response) => {
+  const id = request.params.id;
+  const data = request.body;
+  await Task.complete(id, data);
+  response.status(204).end();
 });
 
 const tranformStringToFormVariable = (str: string): FormVariable[] => {

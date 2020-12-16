@@ -1,7 +1,7 @@
-import registerUserTasks from './RegisterUser';
+import registerUserTasks from './RegisterReader';
 
 export const init = () => {
     registerUserTasks.createReader();
-    registerUserTasks.activateUser();
+    registerUserTasks.activateReader();
     registerUserTasks.sendActivation();
 }

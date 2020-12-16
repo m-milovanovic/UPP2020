@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { FormVariablePOST, FormVariables, FormVariablesPOST } from '../interfaces';
+import { FormVariables, FormVariablesPOST } from '../interfaces';
 
 const getTaskFormVariables = async (taskId: string): Promise<FormVariables> => {
   const response = await Axios.get(

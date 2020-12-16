@@ -4,11 +4,12 @@ import LocalStorageService from '../services/LocalStorageService';
 import ProcessService from '../services/ProcessService';
 import TaskService from '../services/TaskService';
 import GenericForm from './GenericForm';
+import { useHistory } from 'react-router-dom'
 
 const RegisterReaderForm: React.FC = () => {
   const [formState, setFormState] = useState<FormVariables>({ variables: {} });
   const [taskId, setTaskId] = useState<string>('');
-
+  const history = useHistory()
   useEffect(() => {
     const getFormVariables = async () => {
       let processId = LocalStorageService.getProcessId();
@@ -16,8 +17,13 @@ const RegisterReaderForm: React.FC = () => {
         processId = await ProcessService.startProcess('registerReader');
       }
       let activeTaskId = await ProcessService.getActiveTaskId(processId);
-      setFormState(await TaskService.getTaskFormVariables(activeTaskId));
-      setTaskId(activeTaskId);
+      if (activeTaskId) {
+        setFormState(await TaskService.getTaskFormVariables(activeTaskId));
+        setTaskId(activeTaskId);
+      } else {
+        history.push('/login')
+      }
+
     };
     getFormVariables();
   }, []);
@@ -25,6 +31,7 @@ const RegisterReaderForm: React.FC = () => {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await TaskService.completeTask(taskId, formState);
+    window.location.reload()
   };
 
   return (

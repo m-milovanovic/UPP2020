@@ -1,13 +1,12 @@
+const nodemailer = require('nodemailer');
 
-var nodemailer = require('nodemailer');
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: process.env.MAIL_USERNAME,
         pass: process.env.MAIL_PASSWORD
     }
 })
-
 const send = (userEmail: string, processID: string) => {
     const mailOptions = {
         from: "Literay association",

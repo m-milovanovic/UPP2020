@@ -1,6 +1,4 @@
-import dotenv from 'dotenv'
 
-dotenv.config();
 
 const CAMUNDA_API = process.env.CAMUNDA_API;
 

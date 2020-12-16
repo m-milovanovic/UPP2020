@@ -12,8 +12,13 @@ router.get('/:key/start', async (request, response) => {
 
 router.get('/:id/activeTask', async (request, response) => {
   const id = request.params.id;
-  const taskId = (await Task.getTask(id))[0].id;
-  response.json(taskId);
+  const tasks = await Task.getTask(id)
+  if (!tasks.length) {
+    response.status(204).end()
+  } else {
+    const taskId = tasks[0].id;
+    response.json(taskId);
+  }
 });
 
 export default router;

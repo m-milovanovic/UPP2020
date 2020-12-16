@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_188595v" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:process id="registerReader" name="Register Reader" isExecutable="true">
+    <bpmn:startEvent id="Event_1oouk3h">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="username" label="Username" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="string" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+              <camunda:constraint name="minlength" config="6" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="password" label="Password" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="password" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+              <camunda:constraint name="minlength" config="8" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="email" label="Email" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="email" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="firstName" label="First name" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="city" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="state" type="string">
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="betaReader" label="Beta reader?" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="checkbox" />
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="genres" label="Genres" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="multiselect" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="JavaScript">var formData = execution.getProcessEngine().getFormService().getStartFormData(execution.getProcessDefinitionId()).getFormFields();
+
+var formFields = org.camunda.spin.Spin.JSON(formData);
+
+execution.setVariable("formData", formFields);
+execution.setVariable("formDataJSONString", formFields.toString());
+
+execution.setVariable("processID", execution.getProcessInstanceId());</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_1l3v30k</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_191x6v6" sourceRef="Event_192ywyi" targetRef="Activity_1awtkz1" />
+    <bpmn:serviceTask id="Activity_1awtkz1" name="Activate reader" camunda:type="external" camunda:topic="activateReader">
+      <bpmn:incoming>Flow_191x6v6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0x2pp01</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0x2pp01" sourceRef="Activity_1awtkz1" targetRef="Event_15iinxj" />
+    <bpmn:scriptTask id="Activity_0plws1t" name="Create user" scriptFormat="JavaScript">
+      <bpmn:incoming>Flow_1w5n4g6</bpmn:incoming>
+      <bpmn:outgoing>Flow_1szevri</bpmn:outgoing>
+      <bpmn:script>var user = execution.getProcessEngine().getIdentityService().newUser(username);
+
+user.firstName = firstName;
+user.lastName = lastName;
+user.email = email;
+user.password = password;
+
+execution.getProcessEngine().getIdentityService().saveUser(user);
+execution.getProcessEngine().getIdentityService().createMembership(user.id, "readers");</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1szevri" sourceRef="Activity_0plws1t" targetRef="Activity_1xo2cot" />
+    <bpmn:sequenceFlow id="Flow_1tcd3k1" sourceRef="Activity_0tk2f2s" targetRef="Event_192ywyi" />
+    <bpmn:serviceTask id="Activity_1xo2cot" name="Create reader" camunda:type="external" camunda:topic="createReader">
+      <bpmn:incoming>Flow_1szevri</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qpgcb3</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0tk2f2s" name="Send activation link" camunda:type="external" camunda:topic="proba">
+      <bpmn:incoming>Flow_0qpgcb3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1tcd3k1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_192ywyi" name="Activation link clicked">
+      <bpmn:incoming>Flow_1tcd3k1</bpmn:incoming>
+      <bpmn:outgoing>Flow_191x6v6</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_17t8g5f" messageRef="Message_0lv13aj" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0qpgcb3" sourceRef="Activity_1xo2cot" targetRef="Activity_0tk2f2s" />
+    <bpmn:sequenceFlow id="Flow_1l3v30k" sourceRef="Event_1oouk3h" targetRef="FillDataReader" />
+    <bpmn:sequenceFlow id="Flow_1w5n4g6" sourceRef="FillDataReader" targetRef="Activity_0plws1t" />
+    <bpmn:userTask id="FillDataReader" name="Fill Data">
+      <bpmn:incoming>Flow_1l3v30k</bpmn:incoming>
+      <bpmn:outgoing>Flow_1w5n4g6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_15iinxj">
+      <bpmn:incoming>Flow_0x2pp01</bpmn:incoming>
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_0lv13aj" name="ActivationLinkClicked" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registerReader">
+      <bpmndi:BPMNEdge id="Flow_1w5n4g6_di" bpmnElement="Flow_1w5n4g6">
+        <di:waypoint x="360" y="122" />
+        <di:waypoint x="420" y="122" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1l3v30k_di" bpmnElement="Flow_1l3v30k">
+        <di:waypoint x="188" y="122" />
+        <di:waypoint x="260" y="122" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qpgcb3_di" bpmnElement="Flow_0qpgcb3">
+        <di:waypoint x="680" y="120" />
+        <di:waypoint x="750" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1tcd3k1_di" bpmnElement="Flow_1tcd3k1">
+        <di:waypoint x="850" y="120" />
+        <di:waypoint x="912" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1szevri_di" bpmnElement="Flow_1szevri">
+        <di:waypoint x="520" y="120" />
+        <di:waypoint x="580" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0x2pp01_di" bpmnElement="Flow_0x2pp01">
+        <di:waypoint x="1110" y="120" />
+        <di:waypoint x="1172" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_191x6v6_di" bpmnElement="Flow_191x6v6">
+        <di:waypoint x="948" y="120" />
+        <di:waypoint x="1010" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1oouk3h_di" bpmnElement="Event_1oouk3h">
+        <dc:Bounds x="152" y="104" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0gw1r7h_di" bpmnElement="Activity_1awtkz1">
+        <dc:Bounds x="1010" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0v2ke52_di" bpmnElement="Activity_0plws1t">
+        <dc:Bounds x="420" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1iyrhm3_di" bpmnElement="Activity_1xo2cot">
+        <dc:Bounds x="580" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1rcohub_di" bpmnElement="Activity_0tk2f2s">
+        <dc:Bounds x="750" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_009cau8_di" bpmnElement="Event_192ywyi">
+        <dc:Bounds x="912" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="897" y="145" width="67" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ezaq3n_di" bpmnElement="FillDataReader">
+        <dc:Bounds x="260" y="82" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_15iinxj_di" bpmnElement="Event_15iinxj">
+        <dc:Bounds x="1172" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

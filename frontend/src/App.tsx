@@ -1,11 +1,9 @@
 import React from 'react';
 import './App.css';
-import GenericForm from './components/GenericForm';
+import RegisterReaderForm from './components/RegisterReaderForm';
 
 function App() {
-  return (
-    <GenericForm processKey='registerReader'/>
-  );
+  return <RegisterReaderForm />;
 }
 
 export default App;

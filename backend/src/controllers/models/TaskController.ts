@@ -1,6 +1,7 @@
 import express from 'express';
 import Task from '../../camunda-engine/Task';
 import VariableInstance from '../../camunda-engine/VariableInstance';
+import EnumService from '../../services/EnumService';
 
 const router = express.Router();
 
@@ -42,7 +43,7 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
       constraints: constraints,
       options:
         field.properties.inputType === 'multiselect'
-          ? ['SciFi', 'Economics', 'History']
+          ? EnumService.getOptions(field.properties.options)
           : undefined,
     };
   });

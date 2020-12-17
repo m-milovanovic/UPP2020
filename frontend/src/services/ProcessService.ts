@@ -13,14 +13,28 @@ const getActiveTaskId = async (processId: string): Promise<string> => {
     `${process.env.REACT_APP_API_URL}/processes/${processId}/activeTask`
   );
   if (response.status === 204) {
-    LocalStorageService.removeProcessId()
+    LocalStorageService.removeProcessId();
   }
+  return response.data;
+};
+
+const sendMessage = async (processId: string, messageName: string): Promise<boolean> => {
+  let response = await Axios.post(
+    `${process.env.REACT_APP_API_URL}/processes/message`,
+    { processId, messageName },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
   return response.data;
 };
 
 const ProcessService = {
   startProcess,
   getActiveTaskId,
+  sendMessage,
 };
 
 export default ProcessService;

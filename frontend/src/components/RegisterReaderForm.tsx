@@ -4,12 +4,13 @@ import LocalStorageService from '../services/LocalStorageService';
 import ProcessService from '../services/ProcessService';
 import TaskService from '../services/TaskService';
 import GenericForm from './GenericForm';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 
 const RegisterReaderForm: React.FC = () => {
   const [formState, setFormState] = useState<FormVariables>({ variables: {} });
   const [taskId, setTaskId] = useState<string>('');
-  const history = useHistory()
+  const history = useHistory();
+
   useEffect(() => {
     const getFormVariables = async () => {
       let processId = LocalStorageService.getProcessId();
@@ -21,26 +22,21 @@ const RegisterReaderForm: React.FC = () => {
         setFormState(await TaskService.getTaskFormVariables(activeTaskId));
         setTaskId(activeTaskId);
       } else {
-        history.push('/login')
+        history.push('/activate-reader');
       }
-
     };
     getFormVariables();
-  }, []);
+  }, [history]);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await TaskService.completeTask(taskId, formState);
-    window.location.reload()
+    window.location.reload();
   };
 
   return (
     <div>
-      <GenericForm
-        formState={formState}
-        setFormState={setFormState}
-        handleSubmit={handleSubmit}
-      />
+      <GenericForm formState={formState} setFormState={setFormState} handleSubmit={handleSubmit} />
     </div>
   );
 };

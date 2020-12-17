@@ -1,5 +1,6 @@
 import React from 'react';
 import { Constraints } from '../interfaces';
+import { fileToBase64 } from '../utils/convert';
 
 export interface GenericFormFieldProps {
   inputType: string;
@@ -20,7 +21,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
   options,
   setFormState,
 }) => {
-  const onChange = (e: React.ChangeEvent) => {
+  const onChange = async (e: React.ChangeEvent) => {
     let value;
     switch (inputType) {
       case 'string':
@@ -40,6 +41,12 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
           (e.target as HTMLSelectElement).selectedOptions,
           (option) => option.value
         );
+        break;
+      case 'file':
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          value = fileToBase64(file);
+        }
         break;
       default:
     }
@@ -78,9 +85,16 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
           <input type='email' value={value} name={name} onChange={onChange} {...constraints} />
         </label>
       )}
+      {inputType === 'file' && (
+        <label>
+          {label}
+          <input type='file' value={value} name={name} onChange={onChange} {...constraints} />
+        </label>
+      )}
       {inputType === 'multiselect' && (
         <label>
-          {label}<br/>
+          {label}
+          <br />
           <select name={name} multiple onChange={onChange} {...constraints}>
             {options?.map((opt, i) => (
               <option key={`multiselect-opt-${i}`} value={opt}>

@@ -14,7 +14,7 @@ export type FormVariable = {
 };
 
 type ValueInfo = {
-  name: string;
+  filename: string;
   mimetype: string;
   encoding: string;
 };

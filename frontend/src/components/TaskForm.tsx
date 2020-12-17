@@ -21,8 +21,7 @@ const TaskForm: React.FC = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log(formState)
-    //await TaskService.completeTask(id, formState);
+    await TaskService.completeTask(id, formState);
   };
 
   return (

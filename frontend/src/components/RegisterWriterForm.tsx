@@ -30,6 +30,7 @@ const RegisterWriterForm: React.FC = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    console.log(formState)
     await TaskService.completeTask(taskId, formState);
     window.location.reload();
   };

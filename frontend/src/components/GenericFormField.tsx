@@ -49,11 +49,40 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
           variable.value = await fileToBase64(file);
           variable.type = 'File';
           variable.valueInfo = {
-            name: file.name,
+            filename: file.name,
             mimetype: file.type,
             encoding: 'UTF-8',
           };
         }
+        break;
+      case 'multifile':
+        const files = (e.target as HTMLInputElement).files;
+        variable.value = [];
+        if (files) {
+          for (const file of files) {
+            variable.value.push({
+              value: await fileToBase64(file),
+              type: 'File',
+              valueInfo: {
+                filename: file.name,
+                mimetype: file.type,
+                encoding: 'UTF-8',
+              },
+            });
+          }
+        }
+        /*
+        const file = (e.target as HTMLInputElement).files?.[0];
+        if (file) {
+          variable.value = await fileToBase64(file);
+          variable.type = 'File';
+          variable.valueInfo = {
+            filename: file.name,
+            mimetype: file.type,
+            encoding: 'UTF-8',
+          };
+        }
+        */
         break;
       default:
         return;
@@ -97,6 +126,12 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
         <label>
           {label}
           <input type='file' name={name} onChange={onChange} {...constraints} />
+        </label>
+      )}
+      {inputType === 'multifile' && (
+        <label>
+          {label}
+          <input type='file' name={name} onChange={onChange} {...constraints} multiple />
         </label>
       )}
       {inputType === 'multiselect' && (

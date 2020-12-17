@@ -8,9 +8,9 @@
     <bpmn:userTask id="Activity_0e8id7z" name="Submit papers" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="paper" type="string">
+          <camunda:formField id="papers" type="string">
             <camunda:properties>
-              <camunda:property id="inputType" value="file" />
+              <camunda:property id="inputType" value="multifile" />
             </camunda:properties>
             <camunda:validation>
               <camunda:constraint name="required" config="true" />
@@ -19,12 +19,13 @@
         </camunda:formData>
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="JavaScript">var counter = execution.getVariable("counter")
-var paper = execution.getVariableTyped("paper")
+var paper = execution.getVariable("papers")
 
-counter = counter + 1
-
-execution.setVariable("counter", counter);
-execution.setVariable("review" + counter, paper);</camunda:script>
+for(var i=counter; i &lt; papers.length + counter; i++){
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(papers[i-counter].valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(papers[i-counter].value))).mimeType(papers[i-counter].valueInfo.mimetype).encoding(papers[i-counter].valueInfo.encoding).create();
+execution.setVariable("review" + i, fValue);
+}
+execution.setVariable("counter", i);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -59,6 +60,11 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "wri
       <bpmn:messageEventDefinition id="MessageEventDefinition_1a3gn4e" messageRef="Message_1owfzs1" />
     </bpmn:intermediateCatchEvent>
     <bpmn:serviceTask id="Activity_1k9mtdc" name="Activate writer" camunda:type="external" camunda:topic="activateWriter">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("counter", 1);</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1mltfte</bpmn:incoming>
       <bpmn:outgoing>Flow_0zosucv</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -72,13 +78,7 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "wri
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_00qm5vv" sourceRef="Activity_07uoy03" targetRef="Activity_063u3qz" />
     <bpmn:sequenceFlow id="Flow_12tt6i6" sourceRef="Activity_063u3qz" targetRef="Activity_0j4tits" />
-    <bpmn:sequenceFlow id="Flow_0zosucv" sourceRef="Activity_1k9mtdc" targetRef="Gateway_0uyjviw">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="take">
-          <camunda:script scriptFormat="JavaScript">execution.setVariable("counter", 0);</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0zosucv" sourceRef="Activity_1k9mtdc" targetRef="Gateway_0uyjviw" />
     <bpmn:sequenceFlow id="Flow_1gvv2c7" sourceRef="Activity_0e8id7z" targetRef="Gateway_0hust52" />
     <bpmn:sequenceFlow id="Flow_1uu6iwx" sourceRef="Event_1wgowz7" targetRef="FillDataWriter" />
     <bpmn:sequenceFlow id="Flow_06hgh7i" sourceRef="Activity_0j4tits" targetRef="Event_1p1cyhu" />
@@ -137,6 +137,24 @@ execution.setVariable('votes', votes);</camunda:script>
         <bpmn:outgoing>Flow_0k078zd</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:userTask id="Activity_1hmfmtf" name="Submit more works">
+        <bpmn:extensionElements>
+          <camunda:executionListener event="end">
+            <camunda:script scriptFormat="JavaScript">var counter = execution.getVariable("counter")
+var paper = execution.getVariable("papers")
+
+for(var i=counter; i &lt; papers.length + counter; i++){
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(papers[i-counter].valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(papers[i-counter].value))).mimeType(papers[i-counter].valueInfo.mimetype).encoding(papers[i-counter].valueInfo.encoding).create();
+execution.setVariable("review" + i, fValue);
+}
+execution.setVariable("counter", i);</camunda:script>
+          </camunda:executionListener>
+          <camunda:taskListener event="create">
+            <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
+          </camunda:taskListener>
+          <camunda:taskListener event="complete">
+            <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
+          </camunda:taskListener>
+        </bpmn:extensionElements>
         <bpmn:incoming>Flow_1po3y2a</bpmn:incoming>
         <bpmn:outgoing>Flow_18yarxv</bpmn:outgoing>
       </bpmn:userTask>
@@ -263,8 +281,8 @@ execution.setVariable('votes', votes);</camunda:script>
       <bpmn:outgoing>Flow_1gh9geg</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_06493ot" sourceRef="Gateway_0hust52" targetRef="Activity_1jv6toh" />
-    <bpmn:sequenceFlow id="Flow_1gh9geg" name="counter &#60; 2" sourceRef="Gateway_0hust52" targetRef="Gateway_0uyjviw">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${counter &lt; 2}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1gh9geg" name="counter &#60; 3" sourceRef="Gateway_0hust52" targetRef="Gateway_0uyjviw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${counter &lt; 3}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_147xv4s" sourceRef="FillDataWriter" targetRef="Activity_07uoy03" />
     <bpmn:userTask id="FillDataWriter" name="Fill data">

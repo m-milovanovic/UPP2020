@@ -1,5 +1,5 @@
 import React, { SyntheticEvent } from 'react';
-import { FormVariables } from '../interfaces';
+import { FormVariable, FormVariables } from '../interfaces';
 import GenericFormField from './GenericFormField';
 
 interface GenericFormProps {
@@ -9,17 +9,17 @@ interface GenericFormProps {
 }
 
 const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, handleSubmit }) => {
-  const handleSetState = (name: string, value: any) => {
+  const handleSetState = (name: string, variable: any) => {
     setFormState({
       ...formState,
       variables: {
         ...formState.variables,
-        [name]: { ...formState.variables[name], value: value },
+        [name]: { ...variable },
       },
     });
   };
 
-  const fields = [];
+  const fields: FormVariable[] = [];
   for (const key in formState.variables) {
     fields.push({ ...formState.variables[key] });
   }
@@ -27,7 +27,7 @@ const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, hand
   return (
     <form onSubmit={handleSubmit}>
       {fields.map((formField, i) => (
-        <GenericFormField key={i} {...formField} setFormState={handleSetState} />
+        <GenericFormField key={i} formField={formField} setFormState={handleSetState} />
       ))}
       <button type='submit'>Submit</button>
     </form>

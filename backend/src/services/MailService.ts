@@ -12,7 +12,7 @@ const send = (userEmail: string, processID: string) => {
         from: "Literay association",
         to: userEmail,
         subject: "ACTIVATION LINK",
-        html: `<a href=${process.env.BASE_URL}/activate-reader/${processID}> Click here to activate your account </a>`
+        html: `<a href=${process.env.BASE_URL}/activate/${processID}> Click here to activate your account </a>`
     }
     transporter.sendMail(mailOptions, (error: any, info: any) => {
         if (error) {

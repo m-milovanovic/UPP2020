@@ -8,9 +8,9 @@
     <bpmn:userTask id="Activity_0e8id7z" name="Submit papers" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="paper" type="string">
+          <camunda:formField id="papers" type="string">
             <camunda:properties>
-              <camunda:property id="inputType" value="file" />
+              <camunda:property id="inputType" value="multifile" />
             </camunda:properties>
             <camunda:validation>
               <camunda:constraint name="required" config="true" />
@@ -18,10 +18,21 @@
           </camunda:formField>
         </camunda:formData>
         <camunda:executionListener event="end">
-          <camunda:script scriptFormat="JavaScript">var papers = execution.getVariable("papers")
-papers.add(paper);
-execution.setVariable("papers", papers);</camunda:script>
+          <camunda:script scriptFormat="JavaScript">var counter = execution.getVariable("counter")
+var paper = execution.getVariable("papers")
+
+for(var i=counter; i &lt; papers.length + counter; i++){
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(papers[i-counter].valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(papers[i-counter].value))).mimeType(papers[i-counter].valueInfo.mimetype).encoding(papers[i-counter].valueInfo.encoding).create();
+execution.setVariable("review" + i, fValue);
+}
+execution.setVariable("counter", i);</camunda:script>
         </camunda:executionListener>
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
+        </camunda:taskListener>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
+        </camunda:taskListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0xwoua7</bpmn:incoming>
       <bpmn:outgoing>Flow_1gvv2c7</bpmn:outgoing>
@@ -49,71 +60,18 @@ execution.getProcessEngine().getIdentityService().createMembership(user.id, "wri
       <bpmn:messageEventDefinition id="MessageEventDefinition_1a3gn4e" messageRef="Message_1owfzs1" />
     </bpmn:intermediateCatchEvent>
     <bpmn:serviceTask id="Activity_1k9mtdc" name="Activate writer" camunda:type="external" camunda:topic="activateWriter">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("counter", 1);</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1mltfte</bpmn:incoming>
       <bpmn:outgoing>Flow_0zosucv</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:startEvent id="Event_1wgowz7">
       <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="username" label="Username" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-              <camunda:constraint name="minLength" config="6" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="password" label="Password" type="string">
-            <camunda:properties>
-              <camunda:property id="inputType" value="password" />
-            </camunda:properties>
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-              <camunda:constraint name="minLength" config="8" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="email" label="Email" type="string">
-            <camunda:properties>
-              <camunda:property id="inputType" value="email" />
-            </camunda:properties>
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="firstName" label="First name" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="lastName" label="Last name" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="city" label="City" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="state" label="State" type="string">
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-          <camunda:formField id="genres" type="string">
-            <camunda:properties>
-              <camunda:property id="inputType" value="multiselect" />
-            </camunda:properties>
-            <camunda:validation>
-              <camunda:constraint name="required" config="true" />
-            </camunda:validation>
-          </camunda:formField>
-        </camunda:formData>
         <camunda:executionListener event="start">
-          <camunda:script scriptFormat="JavaScript">var formData = execution.getProcessEngine().getFormService().getStartFormData(execution.getProcessDefinitionId()).getFormFields();
-
-var formFields = org.camunda.spin.Spin.JSON(formData);
-
-execution.setVariable("formData", formFields);
-execution.setVariable("formDataJSONString", formFields.toString());</camunda:script>
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("processID", execution.getProcessInstanceId());</camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_1uu6iwx</bpmn:outgoing>
@@ -179,6 +137,24 @@ execution.setVariable('votes', votes);</camunda:script>
         <bpmn:outgoing>Flow_0k078zd</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:userTask id="Activity_1hmfmtf" name="Submit more works">
+        <bpmn:extensionElements>
+          <camunda:executionListener event="end">
+            <camunda:script scriptFormat="JavaScript">var counter = execution.getVariable("counter")
+var paper = execution.getVariable("papers")
+
+for(var i=counter; i &lt; papers.length + counter; i++){
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(papers[i-counter].valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(papers[i-counter].value))).mimeType(papers[i-counter].valueInfo.mimetype).encoding(papers[i-counter].valueInfo.encoding).create();
+execution.setVariable("review" + i, fValue);
+}
+execution.setVariable("counter", i);</camunda:script>
+          </camunda:executionListener>
+          <camunda:taskListener event="create">
+            <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
+          </camunda:taskListener>
+          <camunda:taskListener event="complete">
+            <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
+          </camunda:taskListener>
+        </bpmn:extensionElements>
         <bpmn:incoming>Flow_1po3y2a</bpmn:incoming>
         <bpmn:outgoing>Flow_18yarxv</bpmn:outgoing>
       </bpmn:userTask>
@@ -305,11 +281,88 @@ execution.setVariable('votes', votes);</camunda:script>
       <bpmn:outgoing>Flow_1gh9geg</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_06493ot" sourceRef="Gateway_0hust52" targetRef="Activity_1jv6toh" />
-    <bpmn:sequenceFlow id="Flow_1gh9geg" name="papers.size() &#60; 2 || continue==false" sourceRef="Gateway_0hust52" targetRef="Gateway_0uyjviw">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${papers.size() &lt; 2 || continue &lt;}</bpmn:conditionExpression>
+    <bpmn:sequenceFlow id="Flow_1gh9geg" name="counter &#60; 3" sourceRef="Gateway_0hust52" targetRef="Gateway_0uyjviw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${counter &lt; 3}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_147xv4s" sourceRef="FillDataWriter" targetRef="Activity_07uoy03" />
     <bpmn:userTask id="FillDataWriter" name="Fill data">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="username" label="Username" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="string" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+              <camunda:constraint name="minlength" config="6" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="password" label="Password" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="password" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+              <camunda:constraint name="minlength" config="8" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="email" label="Email" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="email" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="firstName" label="First name" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="string" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="lastName" label="Last name" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="string" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="city" label="City" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="string" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="state" label="State" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="string" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+          <camunda:formField id="favoriteGenres" label="Favorite Genres" type="string">
+            <camunda:properties>
+              <camunda:property id="inputType" value="multiselect" />
+              <camunda:property id="options" value="genres" />
+            </camunda:properties>
+            <camunda:validation>
+              <camunda:constraint name="required" config="true" />
+            </camunda:validation>
+          </camunda:formField>
+        </camunda:formData>
+        <camunda:taskListener event="create">
+          <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
+        </camunda:taskListener>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
+        </camunda:taskListener>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1uu6iwx</bpmn:incoming>
       <bpmn:outgoing>Flow_147xv4s</bpmn:outgoing>
     </bpmn:userTask>
@@ -334,7 +387,7 @@ execution.setVariable('votes', votes);</camunda:script>
         <di:waypoint x="1188" y="130" />
         <di:waypoint x="1188" y="225" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1284" y="90" width="87" height="27" />
+          <dc:Bounds x="1300" y="103" width="56" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_06493ot_di" bpmnElement="Flow_06493ot">
@@ -420,6 +473,9 @@ execution.setVariable('votes', votes);</camunda:script>
       <bpmndi:BPMNEdge id="Flow_0zosucv_di" bpmnElement="Flow_0zosucv">
         <di:waypoint x="1108" y="250" />
         <di:waypoint x="1163" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1132" y="303" width="56" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_12tt6i6_di" bpmnElement="Flow_12tt6i6">
         <di:waypoint x="688" y="250" />

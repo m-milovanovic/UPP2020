@@ -19,7 +19,7 @@
         </camunda:formData>
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="JavaScript">var counter = execution.getVariable("counter")
-var paper = execution.getVariable("paper")
+var paper = execution.getVariableTyped("paper")
 
 counter = counter + 1
 

@@ -91,63 +91,68 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
   };
 
   return (
-    <div>
-      {inputType === 'string' && (
-        <label>
-          {label}
-          <input type='string' value={value} name={name} onChange={onChange} {...constraints} />
-        </label>
-      )}
-      {(inputType === 'number' || inputType === 'long') && (
-        <label>
-          {label}
-          <input type='number' value={value} name={name} onChange={onChange} {...constraints} />
-        </label>
-      )}
-      {(inputType === 'checkbox' || inputType === 'boolean') && (
-        <label>
-          {label}
-          <input type='checkbox' checked={value} name={name} onChange={onChange} {...constraints} />
-        </label>
-      )}
-      {inputType === 'password' && (
-        <label>
-          {label}
-          <input type='password' value={value} name={name} onChange={onChange} {...constraints} />
-        </label>
-      )}
-      {inputType === 'email' && (
-        <label>
-          {label}
-          <input type='email' value={value} name={name} onChange={onChange} {...constraints} />
-        </label>
-      )}
-      {inputType === 'file' && (
-        <label>
-          {label}
-          <input type='file' name={name} onChange={onChange} {...constraints} />
-        </label>
-      )}
-      {inputType === 'multifile' && (
-        <label>
-          {label}
-          <input type='file' name={name} onChange={onChange} {...constraints} multiple />
-        </label>
-      )}
-      {inputType === 'multiselect' && (
-        <label>
-          {label}
-          <br />
-          <select name={name} multiple onChange={onChange} {...constraints}>
-            {options?.map((opt, i) => (
-              <option key={`multiselect-opt-${i}`} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-    </div>
+    <div className="form-group my-3">
+      {
+        inputType === 'string' && (
+          <input type='string' className="form-control" value={value} name={name} onChange={onChange} placeholder={label} {...constraints} />
+        )
+      }
+      {
+        (inputType === 'number' || inputType === 'long') && (
+          <input type='number' className="form-control" value={value} name={name} onChange={onChange} placeholder={label} {...constraints} />
+        )
+      }
+      {
+        (inputType === 'checkbox' || inputType === 'boolean') && (
+          <label className="form-check-label">
+            {label}
+            <input type='checkbox' className="form-check-input" checked={value} name={name} onChange={onChange} {...constraints} />
+          </label>
+        )
+      }
+      {
+        inputType === 'password' && (
+          <input type='password' className="form-control" value={value} name={name} onChange={onChange} placeholder={label} {...constraints} />
+        )
+      }
+      {
+        inputType === 'email' && (
+          <input type='email' className="form-control" value={value} name={name} onChange={onChange} placeholder={label} {...constraints} />
+        )
+      }
+      {
+        inputType === 'file' && (
+          <label>
+            {label}
+            <input type='file' name={name} onChange={onChange} {...constraints} />
+          </label>
+        )
+      }
+      {
+        inputType === 'multifile' && (
+          <label>
+            {label}
+            <input type='file' name={name} onChange={onChange} {...constraints} multiple />
+          </label>
+        )
+      }
+      {
+        inputType === 'multiselect' && (
+
+
+          <>
+            <label>{label}</label>
+            <select className="form-select" name={name} multiple onChange={onChange} {...constraints}>
+              {options?.map((opt, i) => (
+                <option key={`multiselect-opt-${i}`} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
+          </>
+        )
+      }
+    </div >
   );
 };
 

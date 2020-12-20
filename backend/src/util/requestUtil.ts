@@ -1,12 +1,25 @@
-
 const createJsonOptions = () => {
   return {
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   };
-}
+};
 
-export {
-  createJsonOptions
-}
+const createCamundaUser = (user): any => {
+  return {
+    profile: {
+      id: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    },
+    credentials: {
+      password: user.password,
+    },
+  };
+};
+
+
+
+export { createJsonOptions, createCamundaUser };

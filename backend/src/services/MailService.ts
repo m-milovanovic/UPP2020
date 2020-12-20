@@ -1,19 +1,24 @@
 import nodemailer from 'nodemailer';
+import { createActivationMail } from '../../resources/notifications/RegisterReader';
+import { FRONTEND_URL, MAIL_FROM, MAIL_USERNAME, MAIL_PASSWORD } from '../config/config';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.MAIL_USERNAME,
-    pass: process.env.MAIL_PASSWORD
-  }
-})
+    user: MAIL_USERNAME,
+    pass: MAIL_PASSWORD,
+  },
+});
+
 const send = (userEmail: string, processID: string) => {
+  const { subject, html } = createActivationMail(FRONTEND_URL, processID);
   const mailOptions = {
-    from: "Literay association",
+    from: MAIL_FROM,
     to: userEmail,
-    subject: "ACTIVATION LINK",
-    html: `<a href=${process.env.BASE_URL}/activate/${processID}> Click here to activate your account </a>`
-  }
+    subject,
+    html,
+  };
+
   transporter.sendMail(mailOptions, (error: any, info: any) => {
     if (error) {
       console.log(error);
@@ -21,6 +26,6 @@ const send = (userEmail: string, processID: string) => {
       console.log('Email sent: ' + info.response);
     }
   });
-}
+};
 
-export default { send }
+export default { send };

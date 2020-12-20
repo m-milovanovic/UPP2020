@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 import AccountStatus from './AccountStatus';
 
 @Entity()
-export class Reader extends BaseEntity {
+export class Writer extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,40 +21,27 @@ export class Reader extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column({ default: false })
-  beta: boolean;
-
   @Column('text', { array: true, default: {} })
-  favoriteGenres: string[];
-
-  @Column('text', { array: true, default: {} })
-  betaGenres?: string[];
+  files: string[];
 
   @Column({ type: 'enum', enum: AccountStatus, default: AccountStatus.NOT_ACTIVATED })
   status: AccountStatus;
 
-  constructor(reader?: {
+  constructor(writer?: {
     firstName: string;
     lastName: string;
     username: string;
     password: string;
     email: string;
-    favoriteGenres: string[];
-    genres?: string[];
-    beta: boolean;
+    files: string[]
   }) {
     super();
-    if (reader) {
-      this.firstName = reader.firstName;
-      this.lastName = reader.lastName;
-      this.username = reader.username;
-      this.password = reader.password;
-      this.email = reader.email;
-      this.favoriteGenres = reader.favoriteGenres;
-      this.beta = reader.beta;
-      if (this.beta) {
-        this.betaGenres = reader.genres;
-      }
+    if (writer) {
+      this.firstName = writer.firstName;
+      this.lastName = writer.lastName;
+      this.username = writer.username;
+      this.password = writer.password;
+      this.email = writer.email;
       this.status = AccountStatus.NOT_ACTIVATED;
     }
   }

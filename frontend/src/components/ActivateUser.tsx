@@ -23,13 +23,21 @@ const ActivateUser = () => {
   return (
     <div>
       {activated ? (
-        <div>
-          <div>You have succesfully activated your account</div>
-          <Link to='/login'>Proceed to login page</Link>
+        <div className="alert alert-success mx-auto my-5 w-25" role="alert">
+          <p className="text-center">
+            You have succesfully activated your account
+          </p>
+          <Link to='/login'>
+            <p className="text-center">
+              Proceed to login page
+            </p>
+          </Link>
         </div>
       ) : (
-        <div>Registration complete! Check your email for the activation link</div>
-      )}
+          <div className="alert alert-success mx-auto my-5 w-25" role="alert">
+            Registration complete! Check your email for the activation link
+          </div>
+        )}
     </div>
   );
 };

@@ -97,36 +97,35 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
   };
 
   return (
-    <div>
+    <div className="form-group my-3">
       {inputType === "string" && (
-        <label>
-          {label}
-          <input
-            type="string"
-            value={value}
-            name={name}
-            onChange={onChange}
-            {...constraints}
-          />
-        </label>
+        <input
+          type="string"
+          className="form-control"
+          value={value}
+          name={name}
+          onChange={onChange}
+          placeholder={label}
+          {...constraints}
+        />
       )}
       {(inputType === "number" || inputType === "long") && (
-        <label>
-          {label}
-          <input
-            type="number"
-            value={value}
-            name={name}
-            onChange={onChange}
-            {...constraints}
-          />
-        </label>
+        <input
+          type="number"
+          className="form-control"
+          value={value}
+          name={name}
+          onChange={onChange}
+          placeholder={label}
+          {...constraints}
+        />
       )}
       {(inputType === "checkbox" || inputType === "boolean") && (
-        <label>
+        <label className="form-check-label">
           {label}
           <input
             type="checkbox"
+            className="form-check-input"
             checked={value}
             name={name}
             onChange={onChange}
@@ -135,28 +134,26 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
         </label>
       )}
       {inputType === "password" && (
-        <label>
-          {label}
-          <input
-            type="password"
-            value={value}
-            name={name}
-            onChange={onChange}
-            {...constraints}
-          />
-        </label>
+        <input
+          type="password"
+          className="form-control"
+          value={value}
+          name={name}
+          onChange={onChange}
+          placeholder={label}
+          {...constraints}
+        />
       )}
       {inputType === "email" && (
-        <label>
-          {label}
-          <input
-            type="email"
-            value={value}
-            name={name}
-            onChange={onChange}
-            {...constraints}
-          />
-        </label>
+        <input
+          type="email"
+          className="form-control"
+          value={value}
+          name={name}
+          onChange={onChange}
+          placeholder={label}
+          {...constraints}
+        />
       )}
       {inputType === "file" && (
         <label>
@@ -177,30 +174,39 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
         </label>
       )}
       {inputType === "multiselect" && (
-        <label>
-          {label}
-          <br />
-          <select name={name} multiple onChange={onChange} {...constraints}>
+        <>
+          <label>{label}</label>
+          <select
+            className="form-select"
+            name={name}
+            multiple
+            onChange={onChange}
+            {...constraints}
+          >
             {options?.map((opt, i) => (
               <option key={`multiselect-opt-${i}`} value={opt}>
                 {opt}
               </option>
             ))}
           </select>
-        </label>
+        </>
       )}
       {inputType === "enum" && (
-        <label>
-          {label}
-          <br />
-          <select name={name} onChange={onChange} {...constraints}>
+        <>
+          <label>{label}</label>
+          <select
+            className="form-select"
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          >
             {options?.map((opt, i) => (
               <option key={`enum-opt-${i}`} value={opt}>
                 {opt}
               </option>
             ))}
           </select>
-        </label>
+        </>
       )}
     </div>
   );

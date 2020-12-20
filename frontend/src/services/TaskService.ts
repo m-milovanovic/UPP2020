@@ -1,5 +1,5 @@
-import Axios from 'axios';
-import { FormVariables } from '../interfaces';
+import Axios from "axios";
+import { FormVariables, Task } from "../interfaces";
 
 const getTaskFormVariables = async (taskId: string): Promise<FormVariables> => {
   const response = await Axios.get(
@@ -11,7 +11,7 @@ const getTaskFormVariables = async (taskId: string): Promise<FormVariables> => {
     formVariables.variables[variable.name] = {
       inputType: variable.inputType,
       label: variable.label,
-      value: '',
+      value: "",
       name: variable.name,
       constraints: variable.constraints,
       options: variable.options,
@@ -20,13 +20,27 @@ const getTaskFormVariables = async (taskId: string): Promise<FormVariables> => {
   return formVariables;
 };
 
-const completeTask = async (taskId: string, variables?: FormVariables): Promise<void> => {
-  return await Axios.post(`${process.env.REACT_APP_API_URL}/tasks/${taskId}/complete`, variables);
+const completeTask = async (
+  taskId: string,
+  variables?: FormVariables
+): Promise<void> => {
+  return await Axios.post(
+    `${process.env.REACT_APP_API_URL}/tasks/${taskId}/complete`,
+    variables
+  );
+};
+
+const getMyTasks = async (username: string): Promise<Task[]> => {
+  const response = await Axios.get(
+    `${process.env.REACT_APP_API_URL}/tasks/myTasks/${username}`
+  );
+  return response.data;
 };
 
 const TaskService = {
   getTaskFormVariables,
   completeTask,
+  getMyTasks,
 };
 
 export default TaskService;

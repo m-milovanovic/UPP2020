@@ -19,4 +19,9 @@ type ValueInfo = {
   encoding: string;
 };
 
+export interface Task {
+  id: string;
+  name: string;
+}
+
 export type Constraints = Record<string, string[] | undefined>;

@@ -1,9 +1,6 @@
-import registerUserTasks from './RegisterReader';
-import registerWriterTasks from './RegisterWriter';
+import registerUserTasks from "./RegisterReader";
+import registerWriterTasks from "./RegisterWriter";
 export const init = () => {
-  registerUserTasks.createReader();
-  registerUserTasks.activateReader();
-  registerUserTasks.sendActivation();
-  registerWriterTasks.activateWriter();
-  registerWriterTasks.createWriter();
+  Object.values(registerUserTasks).forEach((s) => s());
+  Object.values(registerWriterTasks).forEach((s) => s());
 };

@@ -1,6 +1,6 @@
-import React from 'react';
-import { FormVariable } from '../interfaces';
-import { fileToBase64 } from '../utils/convert';
+import React from "react";
+import { FormVariable } from "../interfaces";
+import { fileToBase64 } from "../utils/convert";
 
 /*
 export interface GenericFormFieldProps {
@@ -19,54 +19,60 @@ export interface GenericFormFieldProps {
   setFormState: (name: string, value: any) => void;
 }
 
-const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormState }) => {
+const GenericFormField: React.FC<GenericFormFieldProps> = ({
+  formField,
+  setFormState,
+}) => {
   const { constraints, inputType, label, name, value, options } = formField;
 
   const onChange = async (e: React.ChangeEvent) => {
     let variable: FormVariable = { ...formField };
     switch (formField.inputType) {
-      case 'string':
-      case 'password':
-      case 'email':
+      case "string":
+      case "password":
+      case "email":
         variable.value = (e.target as HTMLInputElement).value;
         break;
-      case 'number':
+      case "number":
         variable.value = +(e.target as HTMLInputElement).value;
         break;
-      case 'boolean':
-      case 'checkbox':
+      case "boolean":
+      case "checkbox":
         variable.value = (e.target as HTMLInputElement).checked;
         break;
-      case 'multiselect':
+      case "multiselect":
         variable.value = Array.from(
           (e.target as HTMLSelectElement).selectedOptions,
           (option) => option.value
         );
         break;
-      case 'file':
+      case "enum":
+        variable.value = (e.target as HTMLSelectElement).value;
+        break;
+      case "file":
         const file = (e.target as HTMLInputElement).files?.[0];
         if (file) {
           variable.value = await fileToBase64(file);
-          variable.type = 'File';
+          variable.type = "File";
           variable.valueInfo = {
             filename: file.name,
             mimetype: file.type,
-            encoding: 'UTF-8',
+            encoding: "UTF-8",
           };
         }
         break;
-      case 'multifile':
+      case "multifile":
         const files = (e.target as HTMLInputElement).files;
         variable.value = [];
         if (files) {
           for (const file of files) {
             variable.value.push({
               value: await fileToBase64(file),
-              type: 'File',
+              type: "File",
               valueInfo: {
                 filename: file.name,
                 mimetype: file.type,
-                encoding: 'UTF-8',
+                encoding: "UTF-8",
               },
             });
           }
@@ -92,55 +98,104 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
 
   return (
     <div>
-      {inputType === 'string' && (
+      {inputType === "string" && (
         <label>
           {label}
-          <input type='string' value={value} name={name} onChange={onChange} {...constraints} />
+          <input
+            type="string"
+            value={value}
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          />
         </label>
       )}
-      {(inputType === 'number' || inputType === 'long') && (
+      {(inputType === "number" || inputType === "long") && (
         <label>
           {label}
-          <input type='number' value={value} name={name} onChange={onChange} {...constraints} />
+          <input
+            type="number"
+            value={value}
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          />
         </label>
       )}
-      {(inputType === 'checkbox' || inputType === 'boolean') && (
+      {(inputType === "checkbox" || inputType === "boolean") && (
         <label>
           {label}
-          <input type='checkbox' checked={value} name={name} onChange={onChange} {...constraints} />
+          <input
+            type="checkbox"
+            checked={value}
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          />
         </label>
       )}
-      {inputType === 'password' && (
+      {inputType === "password" && (
         <label>
           {label}
-          <input type='password' value={value} name={name} onChange={onChange} {...constraints} />
+          <input
+            type="password"
+            value={value}
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          />
         </label>
       )}
-      {inputType === 'email' && (
+      {inputType === "email" && (
         <label>
           {label}
-          <input type='email' value={value} name={name} onChange={onChange} {...constraints} />
+          <input
+            type="email"
+            value={value}
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          />
         </label>
       )}
-      {inputType === 'file' && (
+      {inputType === "file" && (
         <label>
           {label}
-          <input type='file' name={name} onChange={onChange} {...constraints} />
+          <input type="file" name={name} onChange={onChange} {...constraints} />
         </label>
       )}
-      {inputType === 'multifile' && (
+      {inputType === "multifile" && (
         <label>
           {label}
-          <input type='file' name={name} onChange={onChange} {...constraints} multiple />
+          <input
+            type="file"
+            name={name}
+            onChange={onChange}
+            {...constraints}
+            multiple
+          />
         </label>
       )}
-      {inputType === 'multiselect' && (
+      {inputType === "multiselect" && (
         <label>
           {label}
           <br />
           <select name={name} multiple onChange={onChange} {...constraints}>
             {options?.map((opt, i) => (
               <option key={`multiselect-opt-${i}`} value={opt}>
+                {opt}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {inputType === "enum" && (
+        <label>
+          {label}
+          <br />
+          <select name={name} onChange={onChange} {...constraints}>
+            {options?.map((opt, i) => (
+              <option key={`enum-opt-${i}`} value={opt}>
                 {opt}
               </option>
             ))}

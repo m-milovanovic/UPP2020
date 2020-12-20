@@ -7,7 +7,6 @@ const getVariable = async (varName: string) => {
       'Content-Type': 'application/json',
     },
   };
-  console.log('here', varName)
   const result = await axios.post(
     `${CAMUNDA_API}/variable-instance`,
     { variableName: varName },

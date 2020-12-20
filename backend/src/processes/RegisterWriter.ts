@@ -13,7 +13,31 @@ const activateWriter = () => {
   });
 };
 
+const getReviewers = () => {
+  client.subscribe('getReviewers', async function ({ task, taskService }) {
+    console.log('Get reviewers');
+    await taskService.complete(task);
+  });
+};
+
+const sendNotification = () => {
+  client.subscribe('sendNotification', async function ({ task, taskService }) {
+    console.log('Send notification');
+    await taskService.complete(task);
+  });
+};
+
+const deactivateWriter = () => {
+  client.subscribe('deactivateWriter', async function ({ task, taskService }) {
+    console.log('Deactivate writer');
+    await taskService.complete(task);
+  });
+};
+
 export default {
   createWriter,
   activateWriter,
+  getReviewers,
+  sendNotification,
+  deactivateWriter
 };

@@ -125,6 +125,12 @@ execution.setVariable('votes', votes);</camunda:script>
 votes.add(vote);
 execution.setVariable('votes', votes);</camunda:script>
           </camunda:executionListener>
+          <camunda:taskListener event="create">
+            <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
+          </camunda:taskListener>
+          <camunda:taskListener event="complete">
+            <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
+          </camunda:taskListener>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_11ktc05</bpmn:incoming>
         <bpmn:outgoing>Flow_1bbxsdh</bpmn:outgoing>
@@ -136,7 +142,7 @@ execution.setVariable('votes', votes);</camunda:script>
         <bpmn:outgoing>Flow_0vv02m3</bpmn:outgoing>
         <bpmn:outgoing>Flow_0k078zd</bpmn:outgoing>
       </bpmn:exclusiveGateway>
-      <bpmn:userTask id="Activity_1hmfmtf" name="Submit more works">
+      <bpmn:userTask id="Activity_1hmfmtf" name="Submit more works" camunda:assignee="${username}">
         <bpmn:extensionElements>
           <camunda:executionListener event="end">
             <camunda:script scriptFormat="JavaScript">var counter = execution.getVariable("counter")
@@ -154,6 +160,16 @@ execution.setVariable("counter", i);</camunda:script>
           <camunda:taskListener event="complete">
             <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
           </camunda:taskListener>
+          <camunda:formData>
+            <camunda:formField id="papers" type="string">
+              <camunda:properties>
+                <camunda:property id="inputType" value="multifile" />
+              </camunda:properties>
+              <camunda:validation>
+                <camunda:constraint name="required" config="true" />
+              </camunda:validation>
+            </camunda:formField>
+          </camunda:formData>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_1po3y2a</bpmn:incoming>
         <bpmn:outgoing>Flow_18yarxv</bpmn:outgoing>
@@ -196,7 +212,7 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:sequenceFlow id="Flow_11ktc05" sourceRef="Event_1xns0t3" targetRef="Activity_08364y5" />
       <bpmn:sequenceFlow id="Flow_1bbxsdh" sourceRef="Activity_08364y5" targetRef="Gateway_1x3uy1b" />
       <bpmn:sequenceFlow id="Flow_0arcles" name="More info" sourceRef="Gateway_1x3uy1b" targetRef="Activity_0klzp9v">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${java.util.Collections.frequency(votes,"voteMoreInfo") &gt; 0}</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="JavaScript">java.util.Collections.frequency(votes,"voteMoreInfo") &gt; 0</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="Flow_0vv02m3" name="&#62;50 Yes" sourceRef="Gateway_1x3uy1b" targetRef="Event_1ajkt4x" />
       <bpmn:sequenceFlow id="Flow_0k078zd" name="&#62; 50% No" sourceRef="Gateway_1x3uy1b" targetRef="Event_0ebmd2x">

@@ -13,6 +13,7 @@ import TaskController from './controllers/models/TaskController';
 
 //Middlewares
 import tokenMiddleware from './middlewares/tokenMiddleware';
+import { handleErrors } from './middlewares/handleErrors';
 
 createConnection().then((_connection) => {
   console.log("Database connected");
@@ -24,6 +25,7 @@ createConnection().then((_connection) => {
   app.use('/api/registerReader', registerReaderRouter);
   app.use('/api/processes', ProcessController);
   app.use('/api/tasks', TaskController);
+  app.use(handleErrors)
 
   app.listen(PORT, async () => {
     init();

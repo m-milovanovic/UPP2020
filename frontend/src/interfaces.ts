@@ -11,6 +11,7 @@ export type FormVariable = {
   options?: any[];
   type?: string;
   valueInfo?: ValueInfo;
+  error?: string
 };
 
 type ValueInfo = {

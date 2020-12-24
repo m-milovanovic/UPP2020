@@ -48,6 +48,7 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
         field.properties.inputType === 'multiselect'
           ? ['SciFi', 'Economics', 'History']
           : undefined,
+      unique: field.properties.unique,
     };
   });
   return retVal;

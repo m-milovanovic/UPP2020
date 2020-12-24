@@ -30,8 +30,28 @@ const RegisterReaderForm: React.FC = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await TaskService.completeTask(taskId, formState);
-    window.location.reload();
+    clearErrors();
+    try {
+      await TaskService.completeTask(taskId, formState);
+      window.location.reload();
+    } catch (error) {
+      for (const key in error.response?.data) {
+        setFormState({
+          variables: {
+            ...formState.variables,
+            [key]: { ...formState.variables[key], error: error.response.data[key] },
+          },
+        });
+      }
+    }
+  };
+
+  const clearErrors = () => {
+    const newFormState = { ...formState };
+    for (const key in formState.variables) {
+      formState.variables[key].error = undefined;
+    }
+    setFormState(newFormState);
   };
 
   return (

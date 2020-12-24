@@ -7,7 +7,7 @@ const UserTasks: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   useEffect(() => {
     const getTasks = async () => {
-      setTasks(await TaskService.getMyTasks("milan"));
+      setTasks(await TaskService.getMyTasks());
     };
     getTasks();
   }, []);

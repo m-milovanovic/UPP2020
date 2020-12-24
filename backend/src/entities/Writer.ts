@@ -27,13 +27,16 @@ export class Writer extends BaseEntity {
   @Column({ type: 'enum', enum: AccountStatus, default: AccountStatus.NOT_ACTIVATED })
   status: AccountStatus;
 
+  @Column('text', { array: true, default: {} })
+  favoriteGenres: string[];
+
   constructor(writer?: {
     firstName: string;
     lastName: string;
     username: string;
     password: string;
     email: string;
-    files: string[]
+    favoriteGenres: string[]
   }) {
     super();
     if (writer) {
@@ -43,6 +46,7 @@ export class Writer extends BaseEntity {
       this.password = writer.password;
       this.email = writer.email;
       this.status = AccountStatus.NOT_ACTIVATED;
+      this.favoriteGenres = writer.favoriteGenres;
     }
   }
 }

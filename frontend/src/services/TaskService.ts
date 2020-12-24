@@ -30,9 +30,9 @@ const completeTask = async (
   );
 };
 
-const getMyTasks = async (username: string): Promise<Task[]> => {
+const getMyTasks = async (): Promise<Task[]> => {
   const response = await Axios.get(
-    `${process.env.REACT_APP_API_URL}/tasks/myTasks/${username}`
+    `${process.env.REACT_APP_API_URL}/tasks/myTasks`
   );
   return response.data;
 };

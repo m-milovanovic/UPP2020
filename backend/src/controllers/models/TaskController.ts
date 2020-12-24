@@ -15,8 +15,8 @@ router.get('/:id/formVariables', async (request, response) => {
   response.json(formVariables);
 });
 
-router.get('/myTasks/:id', async (request, response) => {
-  const username = request.params.id;
+router.get('/myTasks', async (request, response) => {
+  const username = request["userInfo"].username;
   response.json(await Task.getAssignedTasks(username));
 });
 
@@ -40,7 +40,7 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
   let retVal: FormVariable[] = fieldList.map((field) => {
     let constraints: Record<string, string> = {};
     field.validationConstraints.forEach((cons) => (constraints[cons.name] = cons.configuration));
-    if(field.properties.pattern) {
+    if (field.properties.pattern) {
       constraints.pattern = field.properties.pattern
     }
     const variable = <FormVariable>{

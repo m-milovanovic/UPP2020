@@ -1,14 +1,27 @@
 import client from '../CamundaClient';
+import { Writer } from '../entities/Writer';
+import WriterService from '../services/WriterService';
 
 const createWriter = () =>
   client.subscribe('createWriter', async function ({ task, taskService }) {
     console.log('create writer');
+    let writer: Writer = new Writer({
+      firstName: task.variables.get('firstName'),
+      lastName: task.variables.get('lastName'),
+      username: task.variables.get('username'),
+      password: task.variables.get('password'),
+      email: task.variables.get('email'),
+      favoriteGenres: JSON.parse(task.variables.get('favoriteGenres')),
+    });
+    WriterService.save(writer);
     await taskService.complete(task);
   });
 
-const activateWriter = () => {
-  client.subscribe('activateWriter', async function ({ task, taskService }) {
-    console.log('Activate writer');
+const confirmWritersMail = () => {
+  client.subscribe('confirmWritersMail', async function ({ task, taskService }) {
+    console.log('Confirm writers mail');
+    const username = task.variables.get('username');
+    await WriterService.confirmWritersMail(username);
     await taskService.complete(task);
   });
 };
@@ -36,7 +49,7 @@ const deactivateWriter = () => {
 
 export default {
   createWriter,
-  activateWriter,
+  confirmWritersMail,
   getReviewers,
   sendNotification,
   deactivateWriter

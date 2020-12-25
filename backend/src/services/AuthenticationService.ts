@@ -33,7 +33,6 @@ const authenticate = async (username: string, password: string) => {
     }
   } else {
     const writer: Writer = await WriterService.findByUsername(username);
-    console.log(writer)
     const ind: boolean = await bcrypt.compare(password, writer.password);
     if (
       ind &&

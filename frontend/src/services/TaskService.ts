@@ -1,6 +1,8 @@
 import Axios from "axios";
 import { FormVariables, Task } from "../interfaces";
 
+const tasksUrl = `${process.env.REACT_APP_API_URL}/tasks`
+
 const getTaskFormVariables = async (taskId: string): Promise<FormVariables> => {
   const response = await Axios.get(
     `${process.env.REACT_APP_API_URL}/tasks/${taskId}/formVariables`
@@ -25,14 +27,14 @@ const completeTask = async (
   variables?: FormVariables
 ): Promise<void> => {
   return await Axios.post(
-    `${process.env.REACT_APP_API_URL}/tasks/${taskId}/complete`,
+    `${tasksUrl}/${taskId}/complete`,
     variables
   );
 };
 
 const getMyTasks = async (): Promise<Task[]> => {
   const response = await Axios.get(
-    `${process.env.REACT_APP_API_URL}/tasks/myTasks`
+    `${tasksUrl}/myTasks`
   );
   return response.data;
 };

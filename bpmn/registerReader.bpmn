@@ -37,7 +37,7 @@
           <camunda:formField id="username" label="Username" type="string">
             <camunda:properties>
               <camunda:property id="inputType" value="string" />
-              <camunda:property id="unique" value="readers" />
+              <camunda:property id="unique" value="camunda-users" />
               <camunda:property id="pattern" value="[a-zA-Z]*" />
             </camunda:properties>
             <camunda:validation>

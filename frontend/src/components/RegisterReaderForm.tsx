@@ -1,10 +1,10 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { FormVariables } from '../interfaces';
 import LocalStorageService from '../services/LocalStorageService';
 import ProcessService from '../services/ProcessService';
 import TaskService from '../services/TaskService';
 import GenericForm from './GenericForm';
-import { useHistory } from 'react-router-dom';
 
 const RegisterReaderForm: React.FC = () => {
   const [formState, setFormState] = useState<FormVariables>({ variables: {} });
@@ -22,11 +22,11 @@ const RegisterReaderForm: React.FC = () => {
         setFormState(await TaskService.getTaskFormVariables(activeTaskId));
         setTaskId(activeTaskId);
       } else {
-        history.push('/activate');
+        history.push('/activationSent')
       }
     };
     getFormVariables();
-  }, [history]);
+  }, []);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();

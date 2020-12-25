@@ -5,7 +5,8 @@ import RegisterReaderForm from './components/RegisterReaderForm';
 import RegisterWriterForm from './components/RegisterWriterForm';
 import TaskForm from './components/TaskForm';
 import UserTasks from './components/UserTasks';
-import Login from './components/Login'
+import Login from './components/Login';
+import ActivationSent from './components/ActivationSent';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path='/register/writer' component={RegisterWriterForm} />
       <Route path='/user/tasks/:id' component={TaskForm} />
       <Route path='/user/tasks' component={UserTasks} />
+      <Route path='/activationSent' component={ActivationSent} />
     </Switch>
   );
 }

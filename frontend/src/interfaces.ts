@@ -11,7 +11,7 @@ export type FormVariable = {
   options?: any[];
   type?: string;
   valueInfo?: ValueInfo;
-  error?: string
+  error?: string;
 };
 
 type ValueInfo = {
@@ -26,3 +26,11 @@ export interface Task {
 }
 
 export type Constraints = Record<string, string[] | undefined>;
+
+export enum AccountStatus {
+  NOT_ACTIVATED = 'Not activated',
+  NOT_APPROVED = 'Not approved',
+  NOT_PAID = 'Not paid',
+  DECLINED = 'Declined',
+  ACTIVATED = 'Activated',
+}

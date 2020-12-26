@@ -1,7 +1,7 @@
 import express from 'express';
-import ProcessDefinition from '../../camunda-engine/ProcessDefinition';
-import ProcessInstance from '../../camunda-engine/ProcessInstance';
-import Task from '../../camunda-engine/Task';
+import ProcessDefinition from '../camunda-engine/ProcessDefinition';
+import ProcessInstance from '../camunda-engine/ProcessInstance';
+import Task from '../camunda-engine/Task';
 
 const router = express.Router();
 

@@ -26,7 +26,7 @@ const confirmWritersMail = async (username: string) => {
 
 const approveWriter = async (username: string) => {
   const writer: Writer = await Writer.findOne({ username });
-  writer.status = AccountStatus.NOT_PAYED;
+  writer.status = AccountStatus.NOT_PAID;
   await writer.save();
 };
 

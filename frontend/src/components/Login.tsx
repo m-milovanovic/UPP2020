@@ -1,13 +1,20 @@
 import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import logo from '../images/login_logo.png'
+import AuthService from '../services/AuthService'
+import LocalStorageService from '../services/LocalStorageService'
 
 const Login = () => {
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const history = useHistory();
 
-  const handleLogin = () => {
-    console.log(email)
-    console.log(password)
+  const handleLogin = (event: React.FormEvent) => {
+    event.preventDefault()
+    AuthService.login(username, password).then(response => {
+      LocalStorageService.setJwt(response.data)
+      history.push('/user/tasks')
+    })
   }
   return (
     <div className="container bg-white">
@@ -19,7 +26,7 @@ const Login = () => {
           <h3 className="mb-5">LOGIN</h3>
           <form className="w-100" onSubmit={handleLogin}>
             <div className="mb-3 ">
-              <input type="text" value={email} onChange={(event) => setEmail(event.target.value)} className="form-control" placeholder="Email" />
+              <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} className="form-control" placeholder="Username" />
             </div>
             <div className="mb-3">
               <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} className="form-control" placeholder="Password" />

@@ -1,16 +1,11 @@
-const getProcessId = () => localStorage.getItem('processId');
-const setProcessId = (processId: string) => localStorage.setItem('processId', processId);
-const removeProcessId = () => localStorage.removeItem('processId');
-
 const setJwt = (token: string) => localStorage.setItem('jwt', token)
 const getJwt = () => localStorage.getItem('jwt')
+const removeJwt = () => localStorage.removeItem('jwt')
 
 const LocalStorageService = {
-  getProcessId,
-  setProcessId,
-  removeProcessId,
   setJwt,
-  getJwt
+  getJwt,
+  removeJwt
 };
 
 export default LocalStorageService;

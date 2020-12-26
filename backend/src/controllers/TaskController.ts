@@ -1,9 +1,9 @@
 import express from 'express';
-import Task from '../../camunda-engine/Task';
-import VariableInstance from '../../camunda-engine/VariableInstance';
-import EnumService from '../../services/EnumService';
-import ValidationService from '../../services/ValidationService';
-import { FormVariable } from '../../types';
+import Task from '../camunda-engine/Task';
+import VariableInstance from '../camunda-engine/VariableInstance';
+import EnumService from '../services/EnumService';
+import ValidationService from '../services/ValidationService';
+import { FormVariable } from '../types';
 
 const router = express.Router();
 
@@ -16,13 +16,22 @@ router.get('/:id/formVariables', async (request, response) => {
 });
 
 router.get('/myTasks', async (request, response) => {
-  const username = request["userInfo"].username;
+  const username = request['userInfo'].username;
   response.json(await Task.getAssignedTasks(username));
 });
 
 router.post('/:id/complete', async (request, response) => {
   const id = request.params.id;
   const data = request.body;
+  const task = await Task.getTaskById(id);
+  if (!task) {
+    response.status(404).end();
+    return;
+  }
+  if (task.assignee && task.assignee !== request['userInfo'].username) {
+    response.status(401).end();
+    return;
+  }
   const fieldsObject = await VariableInstance.getVariable(id);
   fieldsObject.value = fieldsObject.value.replaceAll('"', '"');
   const formVariables = tranformStringToFormVariable(fieldsObject.value);
@@ -41,7 +50,7 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
     let constraints: Record<string, string> = {};
     field.validationConstraints.forEach((cons) => (constraints[cons.name] = cons.configuration));
     if (field.properties.pattern) {
-      constraints.pattern = field.properties.pattern
+      constraints.pattern = field.properties.pattern;
     }
     const variable = <FormVariable>{
       name: <string>field.id,

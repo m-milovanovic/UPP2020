@@ -6,4 +6,6 @@ export class CamundaUser extends BaseEntity {
   username: string;
   @Column({ name: 'pwd_' })
   password: string;
+  @Column({ name: 'email_' })
+  email: string;
 }

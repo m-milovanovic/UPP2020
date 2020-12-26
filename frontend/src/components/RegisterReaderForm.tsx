@@ -1,7 +1,6 @@
 import React, { SyntheticEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FormVariables } from '../interfaces';
-import LocalStorageService from '../services/LocalStorageService';
 import ProcessService from '../services/ProcessService';
 import TaskService from '../services/TaskService';
 import GenericForm from './GenericForm';
@@ -10,30 +9,44 @@ const RegisterReaderForm: React.FC = () => {
   const [formState, setFormState] = useState<FormVariables>({ variables: {} });
   const [taskId, setTaskId] = useState<string>('');
   const history = useHistory();
+  const [processId, setProcessId] = useState<string>('');
+
+  useEffect(() => {
+    const startProcess = async () => {
+      setProcessId(await ProcessService.startProcess('registerReader'));
+    };
+    startProcess();
+  }, []);
+
+  useEffect(() => {
+    const getActiveTask = async () => {
+      if (processId) {
+        setTaskId(await ProcessService.getActiveTaskId(processId));
+      }
+    };
+    getActiveTask();
+  }, [processId]);
 
   useEffect(() => {
     const getFormVariables = async () => {
-      let processId = LocalStorageService.getProcessId();
-      if (processId === null || processId === 'undefined') {
-        processId = await ProcessService.startProcess('registerReader');
-      }
-      let activeTaskId = await ProcessService.getActiveTaskId(processId);
-      if (activeTaskId) {
-        setFormState(await TaskService.getTaskFormVariables(activeTaskId));
-        setTaskId(activeTaskId);
-      } else {
-        history.push('/activationSent')
+      if (taskId) {
+        setFormState(await TaskService.getTaskFormVariables(taskId));
       }
     };
     getFormVariables();
-  }, []);
+  }, [taskId]);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     clearErrors();
     try {
       await TaskService.completeTask(taskId, formState);
-      window.location.reload();
+      const activeTaskId = await ProcessService.getActiveTaskId(processId);
+      if (activeTaskId) {
+        setTaskId(activeTaskId);
+      } else {
+        history.push('/activationSent');
+      }
     } catch (error) {
       for (const key in error.response?.data) {
         setFormState({

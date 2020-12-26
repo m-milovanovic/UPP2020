@@ -38,7 +38,7 @@
             <camunda:properties>
               <camunda:property id="inputType" value="string" />
               <camunda:property id="unique" value="camunda-users" />
-              <camunda:property id="pattern" value="[a-zA-Z]*" />
+              <camunda:property id="pattern" value="[a-zA-Z0-9]*" />
             </camunda:properties>
             <camunda:validation>
               <camunda:constraint name="required" config="true" />

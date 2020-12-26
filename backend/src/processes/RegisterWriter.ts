@@ -1,4 +1,6 @@
+import { Variables } from 'camunda-external-task-client-js';
 import client from '../CamundaClient';
+import { BoardMember } from '../entities/BoardMember';
 import { Writer } from '../entities/Writer';
 import WriterService from '../services/WriterService';
 
@@ -27,9 +29,15 @@ const confirmWritersMail = () => {
 };
 
 const getReviewers = () => {
-  client.subscribe('getReviewers', async function ({ task, taskService }) {
-    console.log('Get reviewers');
-    await taskService.complete(task);
+  client.subscribe('getBoardMembers', async function ({ task, taskService }) {
+    console.log('Get board members');
+    const boardMembers = await BoardMember.find({ take: 3 });
+    const variables = new Variables();
+    variables.set(
+      'boardMembersExt',
+      boardMembers.map((bm) => bm.username)
+    );
+    await taskService.complete(task, variables);
   });
 };
 
@@ -52,5 +60,5 @@ export default {
   confirmWritersMail,
   getReviewers,
   sendNotification,
-  deactivateWriter
+  deactivateWriter,
 };

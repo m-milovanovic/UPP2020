@@ -168,6 +168,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
         <>
           <label>{label}</label>
           <select className='form-select' name={name} multiple onChange={onChange} {...constraints}>
+            <option value=''></option>
             {options?.map((opt, i) => (
               <option key={`multiselect-opt-${i}`} value={opt}>
                 {opt}
@@ -180,6 +181,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
         <>
           <label>{label}</label>
           <select className='form-select' name={name} onChange={onChange} {...constraints}>
+            <option value=''></option>
             {options?.map((opt, i) => (
               <option key={`enum-opt-${i}`} value={opt}>
                 {opt}

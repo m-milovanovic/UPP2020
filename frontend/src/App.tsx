@@ -10,9 +10,13 @@ import UserHome from './components/UserHome';
 import Header from './components/Header';
 import { useState } from 'react';
 import LocalStorageService from './services/LocalStorageService';
+import jwt_decode from 'jwt-decode';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
-  const [user, setUser] = useState(LocalStorageService.getJwt());
+  const [user, setUser] = useState(
+    LocalStorageService.getJwt() ? jwt_decode(LocalStorageService.getJwt()) : null
+  );
 
   return (
     <>
@@ -23,9 +27,12 @@ function App() {
         <Route path='/register/writer' component={RegisterWriterForm} />
         <Route path='/activate/:id?' component={ActivateUser} />
         <Route path='/activationSent' component={ActivationSent} />
-
-        <Route exact path='(|/user)' component={() => <UserHome />} />
-        <Route path='/user/tasks/:id' component={() => <TaskForm />} />
+        <PrivateRoute exact path='(|/user)' user={user}>
+          <UserHome />
+        </PrivateRoute>
+        <PrivateRoute path='/user/tasks/:id' user={user}>
+          <TaskForm />
+        </PrivateRoute>
       </Switch>
     </>
   );

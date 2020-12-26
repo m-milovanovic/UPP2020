@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import logo from '../images/login_logo.png';
 import AuthService from '../services/AuthService';
 import LocalStorageService from '../services/LocalStorageService';
+import jwt_decode from 'jwt-decode';
 
 interface LoginProps {
   setUser: any;
@@ -17,7 +18,7 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
     event.preventDefault();
     AuthService.login(username, password).then((response) => {
       LocalStorageService.setJwt(response.data);
-      setUser(response.data);
+      setUser(jwt_decode(response.data));
       history.push('/user');
     });
   };

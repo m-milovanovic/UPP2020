@@ -12,6 +12,7 @@
     "@types/react-dom": "^16.9.10",
     "axios": "^0.21.0",
     "bootstrap": "^5.0.0-beta1",
+    "jwt-decode": "^3.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",

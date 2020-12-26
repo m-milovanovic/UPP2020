@@ -41,6 +41,15 @@ const getReviewers = () => {
   });
 };
 
+const approveWriter = () => {
+  client.subscribe('approveWriter', async function ({ task, taskService }) {
+    console.log('Approve writer');
+    const username = task.variables.get('username');
+    await WriterService.approveWriter(username);
+    await taskService.complete(task);
+  });
+};
+
 const sendNotification = () => {
   client.subscribe('sendNotification', async function ({ task, taskService }) {
     console.log('Send notification');
@@ -59,6 +68,7 @@ export default {
   createWriter,
   confirmWritersMail,
   getReviewers,
+  approveWriter,
   sendNotification,
   deactivateWriter,
 };

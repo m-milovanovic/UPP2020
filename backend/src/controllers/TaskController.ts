@@ -9,6 +9,15 @@ const router = express.Router();
 
 router.get('/:id/formVariables', async (request, response) => {
   const taskID = request.params.id;
+  const task = await Task.getTaskById(taskID);
+  if (!task) {
+    response.status(404).end();
+    return;
+  }
+  if (task.assignee && task.assignee !== request['userInfo'].username) {
+    response.status(401).end();
+    return;
+  }
   const fieldsObject = await VariableInstance.getVariable(taskID);
   fieldsObject.value = fieldsObject.value.replaceAll('"', '"');
   const formVariables = tranformStringToFormVariable(fieldsObject.value);

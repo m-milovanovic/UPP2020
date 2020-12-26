@@ -218,7 +218,7 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:outgoing>Flow_1b7slwa</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_1jkukz4" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
-      <bpmn:incoming>Flow_1jb59cv</bpmn:incoming>
+      <bpmn:incoming>Flow_1g10izv</bpmn:incoming>
       <bpmn:outgoing>Flow_0kauwmj</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:endEvent id="Event_1hls2mw">
@@ -251,7 +251,7 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_1o2890b" />
     </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_09w490q" name="YES" attachedToRef="Activity_0kvqt8b">
-      <bpmn:outgoing>Flow_1jb59cv</bpmn:outgoing>
+      <bpmn:outgoing>Flow_19t3nrk</bpmn:outgoing>
       <bpmn:escalationEventDefinition id="EscalationEventDefinition_17rgre3" escalationRef="Escalation_0ktfrv5" />
     </bpmn:boundaryEvent>
     <bpmn:boundaryEvent id="Event_0tknaav" name="NO" attachedToRef="Activity_0kvqt8b">
@@ -262,7 +262,6 @@ execution.setVariable("counter", i);</camunda:script>
     <bpmn:sequenceFlow id="Flow_0131ft6" sourceRef="Event_03jjqqq" targetRef="Activity_1r8y6ds" />
     <bpmn:sequenceFlow id="Flow_0uckf7t" sourceRef="Event_0tknaav" targetRef="Activity_1r8y6ds" />
     <bpmn:sequenceFlow id="Flow_1b7slwa" name="Writer not registered" sourceRef="Activity_1r8y6ds" targetRef="Activity_14s27xu" />
-    <bpmn:sequenceFlow id="Flow_1jb59cv" sourceRef="Event_09w490q" targetRef="Activity_1jkukz4" />
     <bpmn:sequenceFlow id="Flow_0kauwmj" sourceRef="Activity_1jkukz4" targetRef="Gateway_1yh3xyd" />
     <bpmn:sequenceFlow id="Flow_10k7nrb" sourceRef="Activity_14s27xu" targetRef="Event_1hls2mw" />
     <bpmn:sequenceFlow id="Flow_0u9soqg" sourceRef="Gateway_1yh3xyd" targetRef="Event_03jjqqq" />
@@ -369,6 +368,12 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:outgoing>Flow_147xv4s</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_0pinbtn" sourceRef="Event_1wgowz7" targetRef="FillDataWriter" />
+    <bpmn:sequenceFlow id="Flow_19t3nrk" sourceRef="Event_09w490q" targetRef="Activity_016kxov" />
+    <bpmn:sequenceFlow id="Flow_1g10izv" sourceRef="Activity_016kxov" targetRef="Activity_1jkukz4" />
+    <bpmn:serviceTask id="Activity_016kxov" name="Approve Writer" camunda:type="external" camunda:topic="approveWriter">
+      <bpmn:incoming>Flow_19t3nrk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1g10izv</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_1oz31ut" name="SubscriptionPaid" />
   <bpmn:escalation id="Escalation_1svv443" name="voteNo" escalationCode="voteNo" />
@@ -376,6 +381,10 @@ execution.setVariable("counter", i);</camunda:script>
   <bpmn:message id="Message_1owfzs1" name="ActivationLinkClicked" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registerWriter">
+      <bpmndi:BPMNEdge id="Flow_0pinbtn_di" bpmnElement="Flow_0pinbtn">
+        <di:waypoint x="196" y="230" />
+        <di:waypoint x="258" y="230" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_147xv4s_di" bpmnElement="Flow_147xv4s">
         <di:waypoint x="358" y="230" />
         <di:waypoint x="420" y="230" />
@@ -425,11 +434,6 @@ execution.setVariable("counter", i);</camunda:script>
         <di:waypoint x="1330" y="920" />
         <di:waypoint x="1405" y="920" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1jb59cv_di" bpmnElement="Flow_1jb59cv">
-        <di:waypoint x="1150" y="808" />
-        <di:waypoint x="1150" y="920" />
-        <di:waypoint x="1230" y="920" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1b7slwa_di" bpmnElement="Flow_1b7slwa">
         <di:waypoint x="1640" y="680" />
         <di:waypoint x="1700" y="680" />
@@ -476,9 +480,14 @@ execution.setVariable("counter", i);</camunda:script>
         <di:waypoint x="520" y="230" />
         <di:waypoint x="580" y="230" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0pinbtn_di" bpmnElement="Flow_0pinbtn">
-        <di:waypoint x="196" y="230" />
-        <di:waypoint x="258" y="230" />
+      <bpmndi:BPMNEdge id="Flow_19t3nrk_di" bpmnElement="Flow_19t3nrk">
+        <di:waypoint x="960" y="808" />
+        <di:waypoint x="960" y="920" />
+        <di:waypoint x="1050" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1g10izv_di" bpmnElement="Flow_1g10izv">
+        <di:waypoint x="1150" y="920" />
+        <di:waypoint x="1230" y="920" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_063u3qz_di" bpmnElement="Activity_063u3qz">
         <dc:Bounds x="420" y="190" width="100" height="80" />
@@ -504,47 +513,8 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmndi:BPMNShape id="Activity_1jv6toh_di" bpmnElement="Activity_1jv6toh">
         <dc:Bounds x="1380" y="190" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1r8y6ds_di" bpmnElement="Activity_1r8y6ds">
-        <dc:Bounds x="1540" y="640" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1jkukz4_di" bpmnElement="Activity_1jkukz4">
-        <dc:Bounds x="1230" y="880" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1hls2mw_di" bpmnElement="Event_1hls2mw">
-        <dc:Bounds x="1862" y="662" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_14s27xu_di" bpmnElement="Activity_14s27xu">
-        <dc:Bounds x="1700" y="640" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1yh3xyd_di" bpmnElement="Gateway_1yh3xyd">
-        <dc:Bounds x="1405" y="895" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_03jjqqq_di" bpmnElement="Event_03jjqqq">
-        <dc:Bounds x="1572" y="802" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1549" y="845" width="83" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1mjlios_di" bpmnElement="Event_1mjlios">
-        <dc:Bounds x="1572" y="902" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1548" y="945" width="85" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1mvz5i0_di" bpmnElement="Event_1mvz5i0">
-        <dc:Bounds x="1732" y="902" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1710" y="945" width="81" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0uyjviw_di" bpmnElement="Gateway_0uyjviw" isMarkerVisible="true">
-        <dc:Bounds x="995" y="205" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0hust52_di" bpmnElement="Gateway_0hust52" isMarkerVisible="true">
-        <dc:Bounds x="1275" y="205" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1qlssyr_di" bpmnElement="FillDataWriter">
-        <dc:Bounds x="258" y="190" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_056asfh_di" bpmnElement="Activity_016kxov">
+        <dc:Bounds x="1050" y="880" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0kvqt8b_di" bpmnElement="Activity_0kvqt8b" isExpanded="true">
         <dc:Bounds x="350" y="430" width="1080" height="360" />
@@ -664,6 +634,48 @@ execution.setVariable("counter", i);</camunda:script>
           <dc:Bounds x="1148" y="635" width="83" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1r8y6ds_di" bpmnElement="Activity_1r8y6ds">
+        <dc:Bounds x="1540" y="640" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jkukz4_di" bpmnElement="Activity_1jkukz4">
+        <dc:Bounds x="1230" y="880" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hls2mw_di" bpmnElement="Event_1hls2mw">
+        <dc:Bounds x="1862" y="662" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_14s27xu_di" bpmnElement="Activity_14s27xu">
+        <dc:Bounds x="1700" y="640" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1yh3xyd_di" bpmnElement="Gateway_1yh3xyd">
+        <dc:Bounds x="1405" y="895" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03jjqqq_di" bpmnElement="Event_03jjqqq">
+        <dc:Bounds x="1572" y="802" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1549" y="845" width="83" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mjlios_di" bpmnElement="Event_1mjlios">
+        <dc:Bounds x="1572" y="902" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1548" y="945" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mvz5i0_di" bpmnElement="Event_1mvz5i0">
+        <dc:Bounds x="1732" y="902" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1710" y="945" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0uyjviw_di" bpmnElement="Gateway_0uyjviw" isMarkerVisible="true">
+        <dc:Bounds x="995" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0hust52_di" bpmnElement="Gateway_0hust52" isMarkerVisible="true">
+        <dc:Bounds x="1275" y="205" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1qlssyr_di" bpmnElement="FillDataWriter">
+        <dc:Bounds x="258" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0tknaav_di" bpmnElement="Event_0tknaav">
         <dc:Bounds x="1412" y="662" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -671,9 +683,9 @@ execution.setVariable("counter", i);</camunda:script>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_09w490q_di" bpmnElement="Event_09w490q">
-        <dc:Bounds x="1132" y="772" width="36" height="36" />
+        <dc:Bounds x="942" y="772" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1169" y="803" width="22" height="14" />
+          <dc:Bounds x="979" y="803" width="22" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

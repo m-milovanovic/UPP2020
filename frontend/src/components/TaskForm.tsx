@@ -15,15 +15,21 @@ const TaskForm: React.FC = () => {
 
   useEffect(() => {
     const getFormVariables = async () => {
-      setFormState(await TaskService.getTaskFormVariables(id));
+      try {
+        setFormState(await TaskService.getTaskFormVariables(id));
+      } catch (error) {
+        if(error.response.status === 401){
+          history.push('/user')
+        }
+      }
     };
     getFormVariables();
-  }, [id]);
+  }, [id, history]);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await TaskService.completeTask(id, formState);
-    history.push('/user/tasks');
+    history.push('/user');
   };
 
   return (

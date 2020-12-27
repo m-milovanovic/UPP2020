@@ -1,7 +1,10 @@
-import { File } from './TaskForm';
-
 interface FilesProps {
   files: File[];
+}
+
+interface File {
+  name: string;
+  id: string;
 }
 
 const Files: React.FC<FilesProps> = ({ files }) => {
@@ -10,7 +13,7 @@ const Files: React.FC<FilesProps> = ({ files }) => {
       <h4>View Files: </h4>
       <ul>
         {files.map((file) => (
-          <li>
+          <li key={file.id}>
             <a
               href={`${process.env.REACT_APP_API_URL}/files/download/${file.id}`}
               target='_blank'

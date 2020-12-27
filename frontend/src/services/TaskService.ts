@@ -7,7 +7,7 @@ const getTaskFormVariables = async (taskId: string): Promise<FormVariables> => {
   const response = await Axios.get(
     `${process.env.REACT_APP_API_URL}/tasks/${taskId}/formVariables`
   );
-  let formVariables: FormVariables = { variables: {} };
+  let formVariables: FormVariables = { variables: {}, additionalData: null };
 
   response.data.forEach((variable: any) => {
     formVariables.variables[variable.name] = {

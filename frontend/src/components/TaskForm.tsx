@@ -4,38 +4,40 @@ import { FormVariables } from '../interfaces';
 import TaskService from '../services/TaskService';
 import FileService from '../services/FileService';
 import GenericForm from './GenericForm';
-import Files from './Files';
 
 interface UrlParams {
   id: string;
 }
 
-export interface File {
-  id: string;
-  name: string;
+interface TaskFormParams {
+  user: any;
 }
 
-const TaskForm: React.FC = () => {
+const TaskForm: React.FC<TaskFormParams> = ({ user }) => {
   const { id } = useParams<UrlParams>();
-  const [formState, setFormState] = useState<FormVariables>({ variables: {} });
+  const [formState, setFormState] = useState<FormVariables>({
+    variables: {},
+    additionalData: null,
+  });
   const history = useHistory();
-  const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
-    const getFormVariables = async () => {
+    const getData = async () => {
       try {
-        setFormState(await TaskService.getTaskFormVariables(id));
+        const files = await FileService.getFiles(id);
+        const formData = await TaskService.getTaskFormVariables(id);
+        formData.additionalData = {
+          type: 'review',
+          data: files,
+        };
+        setFormState(formData);
       } catch (error) {
         if (error.response.status === 401) {
           history.push('/user');
         }
       }
     };
-    const getFiles = async () => {
-      setFiles(await FileService.getFiles(id));
-    };
-    getFormVariables();
-    getFiles();
+    getData();
   }, [id, history]);
 
   const handleSubmit = async (e: SyntheticEvent) => {
@@ -46,7 +48,6 @@ const TaskForm: React.FC = () => {
 
   return (
     <div>
-      {files && <Files files={files} />}
       <GenericForm formState={formState} setFormState={setFormState} handleSubmit={handleSubmit} />
     </div>
   );

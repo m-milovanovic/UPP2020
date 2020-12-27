@@ -1,5 +1,6 @@
 export interface FormVariables {
   variables: Record<string, FormVariable>;
+  additionalData: any;
 }
 
 export type FormVariable = {

@@ -1,6 +1,7 @@
 import React, { SyntheticEvent } from 'react';
 import { FormVariable, FormVariables } from '../interfaces';
 import GenericFormField from './GenericFormField';
+import GenericAdditionalData from './GenericAdditionalData';
 import logo from '../images/book_logo.png';
 
 interface GenericFormProps {
@@ -9,11 +10,7 @@ interface GenericFormProps {
   handleSubmit: (e: SyntheticEvent) => void;
 }
 
-const GenericForm: React.FC<GenericFormProps> = ({
-  formState,
-  setFormState,
-  handleSubmit,
-}) => {
+const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, handleSubmit }) => {
   const handleSetState = (name: string, variable: any) => {
     setFormState({
       ...formState,
@@ -31,19 +28,42 @@ const GenericForm: React.FC<GenericFormProps> = ({
 
   return (
     <div className='row justify-content-between container mx-auto'>
-      <div className='col bg-white p-0'>
-        <img className='rounded h-100' src={logo} alt='' />
-      </div>
-      <div className='col px-4 bg-white'>
-        <form onSubmit={handleSubmit}>
-          {fields.map((formField, i) => (
-            <GenericFormField key={i} formField={formField} setFormState={handleSetState} />
-          ))}
-          <button type='submit' className='btn btn-primary w-100 mb-3'>
-            Submit
-          </button>
-        </form>
-      </div>
+      {formState.additionalData ? (
+        <>
+          <div className='col-lg-4 col-md-4 col-sm-12 bg-white p-0'>
+            <img src={logo} alt='' className='w-100 float rounded' />
+          </div>
+          <div className='col bg-white p-3'>
+            <GenericAdditionalData additionalData={formState.additionalData} />
+          </div>
+          <div className='col-lg-4 col-md-4 col-sm-12 px-4 bg-white'>
+            <form onSubmit={handleSubmit}>
+              {fields.map((formField, i) => (
+                <GenericFormField key={i} formField={formField} setFormState={handleSetState} />
+              ))}
+              <button type='submit' className='btn btn-primary w-100 mb-3'>
+                Submit
+              </button>
+            </form>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className='col-lg-6 col-md-6 col-sm-12 bg-white p-0'>
+            <img src={logo} alt='' className='w-100 float rounded' />
+          </div>          
+          <div className='col px-4 bg-white'>
+            <form onSubmit={handleSubmit}>
+              {fields.map((formField, i) => (
+                <GenericFormField key={i} formField={formField} setFormState={handleSetState} />
+              ))}
+              <button type='submit' className='btn btn-primary w-100 mb-3'>
+                Submit
+              </button>
+            </form>
+          </div>
+        </>
+      )}
     </div>
   );
 };

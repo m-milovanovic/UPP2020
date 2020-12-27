@@ -159,6 +159,11 @@ execution.setVariable("counter", i);</camunda:script>
         <bpmn:outgoing>Flow_18yarxv</bpmn:outgoing>
       </bpmn:userTask>
       <bpmn:serviceTask id="Activity_0klzp9v" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
+        <bpmn:extensionElements>
+          <camunda:executionListener event="start">
+            <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "Some members of the review board have asked for more of your works. Please upload more works to continue your registration process. You have a two week deadline.");</camunda:script>
+          </camunda:executionListener>
+        </bpmn:extensionElements>
         <bpmn:incoming>Flow_0arcles</bpmn:incoming>
         <bpmn:outgoing>Flow_1s29ip6</bpmn:outgoing>
       </bpmn:serviceTask>
@@ -218,6 +223,11 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:outgoing>Flow_1b7slwa</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:serviceTask id="Activity_1jkukz4" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "Your application to our association has been approved! Please pay your subscription fee to complete the registration process. You have a two week deadline.");</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1g10izv</bpmn:incoming>
       <bpmn:outgoing>Flow_0kauwmj</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -226,6 +236,11 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_1g1gtp4" />
     </bpmn:endEvent>
     <bpmn:serviceTask id="Activity_14s27xu" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "We are sad to inform you that you have been rejected from the literary association.");</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_1b7slwa</bpmn:incoming>
       <bpmn:outgoing>Flow_10k7nrb</bpmn:outgoing>
     </bpmn:serviceTask>
@@ -247,7 +262,7 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0afszbu" messageRef="Message_1oz31ut" />
     </bpmn:intermediateCatchEvent>
     <bpmn:endEvent id="Event_1mvz5i0" name="Writer registered">
-      <bpmn:incoming>Flow_15ptt1h</bpmn:incoming>
+      <bpmn:incoming>Flow_09rksh2</bpmn:incoming>
       <bpmn:terminateEventDefinition id="TerminateEventDefinition_1o2890b" />
     </bpmn:endEvent>
     <bpmn:boundaryEvent id="Event_09w490q" name="YES" attachedToRef="Activity_0kvqt8b">
@@ -266,7 +281,7 @@ execution.setVariable("counter", i);</camunda:script>
     <bpmn:sequenceFlow id="Flow_10k7nrb" sourceRef="Activity_14s27xu" targetRef="Event_1hls2mw" />
     <bpmn:sequenceFlow id="Flow_0u9soqg" sourceRef="Gateway_1yh3xyd" targetRef="Event_03jjqqq" />
     <bpmn:sequenceFlow id="Flow_130h9dz" sourceRef="Gateway_1yh3xyd" targetRef="Event_1mjlios" />
-    <bpmn:sequenceFlow id="Flow_15ptt1h" sourceRef="Event_1mjlios" targetRef="Event_1mvz5i0" />
+    <bpmn:sequenceFlow id="Flow_15ptt1h" sourceRef="Event_1mjlios" targetRef="Activity_0asemqj" />
     <bpmn:sequenceFlow id="Flow_0ufuh5p" sourceRef="Activity_1jv6toh" targetRef="Activity_0kvqt8b" />
     <bpmn:exclusiveGateway id="Gateway_0uyjviw">
       <bpmn:incoming>Flow_0zosucv</bpmn:incoming>
@@ -374,13 +389,27 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:incoming>Flow_19t3nrk</bpmn:incoming>
       <bpmn:outgoing>Flow_1g10izv</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_09rksh2" sourceRef="Activity_0asemqj" targetRef="Event_1mvz5i0" />
+    <bpmn:serviceTask id="Activity_0asemqj" name="Confirm writers payment" camunda:type="external" camunda:topic="confirmWritersPayment">
+      <bpmn:incoming>Flow_15ptt1h</bpmn:incoming>
+      <bpmn:outgoing>Flow_09rksh2</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
-  <bpmn:message id="Message_1oz31ut" name="SubscriptionPaid" />
+  <bpmn:message id="Message_1oz31ut" name="subscriptionPaid" />
   <bpmn:escalation id="Escalation_1svv443" name="voteNo" escalationCode="voteNo" />
   <bpmn:escalation id="Escalation_0ktfrv5" name="voteYes" escalationCode="voteYes" />
   <bpmn:message id="Message_1owfzs1" name="ActivationLinkClicked" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="registerWriter">
+      <bpmndi:BPMNEdge id="Flow_1g10izv_di" bpmnElement="Flow_1g10izv">
+        <di:waypoint x="1150" y="920" />
+        <di:waypoint x="1230" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19t3nrk_di" bpmnElement="Flow_19t3nrk">
+        <di:waypoint x="960" y="808" />
+        <di:waypoint x="960" y="920" />
+        <di:waypoint x="1050" y="920" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0pinbtn_di" bpmnElement="Flow_0pinbtn">
         <di:waypoint x="196" y="230" />
         <di:waypoint x="258" y="230" />
@@ -415,7 +444,7 @@ execution.setVariable("counter", i);</camunda:script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_15ptt1h_di" bpmnElement="Flow_15ptt1h">
         <di:waypoint x="1608" y="920" />
-        <di:waypoint x="1732" y="920" />
+        <di:waypoint x="1700" y="920" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_130h9dz_di" bpmnElement="Flow_130h9dz">
         <di:waypoint x="1455" y="920" />
@@ -428,7 +457,7 @@ execution.setVariable("counter", i);</camunda:script>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_10k7nrb_di" bpmnElement="Flow_10k7nrb">
         <di:waypoint x="1800" y="680" />
-        <di:waypoint x="1862" y="680" />
+        <di:waypoint x="1872" y="680" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0kauwmj_di" bpmnElement="Flow_0kauwmj">
         <di:waypoint x="1330" y="920" />
@@ -480,14 +509,9 @@ execution.setVariable("counter", i);</camunda:script>
         <di:waypoint x="520" y="230" />
         <di:waypoint x="580" y="230" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_19t3nrk_di" bpmnElement="Flow_19t3nrk">
-        <di:waypoint x="960" y="808" />
-        <di:waypoint x="960" y="920" />
-        <di:waypoint x="1050" y="920" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1g10izv_di" bpmnElement="Flow_1g10izv">
-        <di:waypoint x="1150" y="920" />
-        <di:waypoint x="1230" y="920" />
+      <bpmndi:BPMNEdge id="Flow_09rksh2_di" bpmnElement="Flow_09rksh2">
+        <di:waypoint x="1800" y="920" />
+        <di:waypoint x="1872" y="920" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Activity_063u3qz_di" bpmnElement="Activity_063u3qz">
         <dc:Bounds x="420" y="190" width="100" height="80" />
@@ -513,8 +537,17 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmndi:BPMNShape id="Activity_1jv6toh_di" bpmnElement="Activity_1jv6toh">
         <dc:Bounds x="1380" y="190" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_056asfh_di" bpmnElement="Activity_016kxov">
-        <dc:Bounds x="1050" y="880" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_0ztjbus_di" bpmnElement="Activity_0asemqj">
+        <dc:Bounds x="1700" y="880" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mvz5i0_di" bpmnElement="Event_1mvz5i0">
+        <dc:Bounds x="1872" y="902" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1850" y="945" width="81" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hls2mw_di" bpmnElement="Event_1hls2mw">
+        <dc:Bounds x="1872" y="662" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0kvqt8b_di" bpmnElement="Activity_0kvqt8b" isExpanded="true">
         <dc:Bounds x="350" y="430" width="1080" height="360" />
@@ -640,9 +673,6 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmndi:BPMNShape id="Activity_1jkukz4_di" bpmnElement="Activity_1jkukz4">
         <dc:Bounds x="1230" y="880" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1hls2mw_di" bpmnElement="Event_1hls2mw">
-        <dc:Bounds x="1862" y="662" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_14s27xu_di" bpmnElement="Activity_14s27xu">
         <dc:Bounds x="1700" y="640" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -661,12 +691,6 @@ execution.setVariable("counter", i);</camunda:script>
           <dc:Bounds x="1548" y="945" width="85" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1mvz5i0_di" bpmnElement="Event_1mvz5i0">
-        <dc:Bounds x="1732" y="902" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1710" y="945" width="81" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0uyjviw_di" bpmnElement="Gateway_0uyjviw" isMarkerVisible="true">
         <dc:Bounds x="995" y="205" width="50" height="50" />
       </bpmndi:BPMNShape>
@@ -675,6 +699,9 @@ execution.setVariable("counter", i);</camunda:script>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1qlssyr_di" bpmnElement="FillDataWriter">
         <dc:Bounds x="258" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_056asfh_di" bpmnElement="Activity_016kxov">
+        <dc:Bounds x="1050" y="880" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0tknaav_di" bpmnElement="Event_0tknaav">
         <dc:Bounds x="1412" y="662" width="36" height="36" />

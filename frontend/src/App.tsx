@@ -12,6 +12,7 @@ import { useState } from 'react';
 import LocalStorageService from './services/LocalStorageService';
 import jwt_decode from 'jwt-decode';
 import PrivateRoute from './components/PrivateRoute';
+import Payment from './components/Payment';
 
 function App() {
   const [user, setUser] = useState(
@@ -32,6 +33,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute path='/user/tasks/:id' user={user}>
           <TaskForm />
+        </PrivateRoute>
+        <PrivateRoute path='/payment' user={user}>
+          <Payment />
         </PrivateRoute>
       </Switch>
     </>

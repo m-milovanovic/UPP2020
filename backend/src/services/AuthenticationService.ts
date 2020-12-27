@@ -67,6 +67,23 @@ const authenticate = async (username: string, password: string) => {
   };
 };
 
+const getUserData = async (username: string) => {
+  const reader: Reader = await ReaderService.findByUsername(username);
+  if (reader) {
+    return reader;
+  }
+  const writer: Writer = await WriterService.findByUsername(username);
+  if (writer) {
+    return writer;
+  }
+  const boardMember: BoardMember = await BoardMemberService.findByUsername(username);
+  if (boardMember) {
+    return boardMember;
+  }
+  return null;
+};
+
 export default {
   authenticate,
+  getUserData,
 };

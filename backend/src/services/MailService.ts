@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
-import { createActivationMail } from '../../resources/notifications/RegisterReader';
-import { FRONTEND_URL, MAIL_FROM, MAIL_USERNAME, MAIL_PASSWORD } from '../config/config';
+import { MAIL_FROM, MAIL_USERNAME, MAIL_PASSWORD } from '../config/config';
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -10,8 +9,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const send = (userEmail: string, processID: string) => {
-  const { subject, html } = createActivationMail(FRONTEND_URL, processID);
+const send = (userEmail: string, subject: string, html: string) => {
   const mailOptions = {
     from: MAIL_FROM,
     to: userEmail,

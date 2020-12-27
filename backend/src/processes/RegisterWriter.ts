@@ -1,7 +1,9 @@
 import { Variables } from 'camunda-external-task-client-js';
+import { createNotificationMail } from '../../resources/notifications/RegisterWriter';
 import client from '../CamundaClient';
 import { BoardMember } from '../entities/BoardMember';
 import { Writer } from '../entities/Writer';
+import MailService from '../services/MailService';
 import WriterService from '../services/WriterService';
 
 const createWriter = () =>
@@ -52,7 +54,13 @@ const approveWriter = () => {
 
 const sendNotification = () => {
   client.subscribe('sendNotification', async function ({ task, taskService }) {
-    console.log('Send notification');
+    const notificationText = task.variables.get('notificationText');
+    const email = task.variables.get('email');
+    const { subject, html } = createNotificationMail(
+      'Literary association notification',
+      notificationText
+    );
+    await MailService.send(email, subject, html);
     await taskService.complete(task);
   });
 };
@@ -60,6 +68,17 @@ const sendNotification = () => {
 const deactivateWriter = () => {
   client.subscribe('deactivateWriter', async function ({ task, taskService }) {
     console.log('Deactivate writer');
+    const username = task.variables.get('username');
+    await WriterService.declineWriter(username);
+    await taskService.complete(task);
+  });
+};
+
+const confirmWritersPayment = () => {
+  client.subscribe('confirmWritersPayment', async function ({ task, taskService }) {
+    console.log('Confirm writers payment');
+    const username = task.variables.get('username');
+    await WriterService.confirmWritersPayment(username);
     await taskService.complete(task);
   });
 };
@@ -71,4 +90,5 @@ export default {
   approveWriter,
   sendNotification,
   deactivateWriter,
+  confirmWritersPayment,
 };

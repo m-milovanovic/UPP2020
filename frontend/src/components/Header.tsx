@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { AccountStatus } from '../interfaces';
+import AuthService from '../services/AuthService';
 import LocalStorageService from '../services/LocalStorageService';
 
 interface HeaderProps {
@@ -16,7 +18,19 @@ const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
     history.push('/login');
   };
 
-  console.log(user);
+  const goToPayment = () => {
+    history.push('/payment');
+  };
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const userData = await AuthService.getUserData();
+        setUser(userData);
+      } catch (error) {}
+    };
+    getUserData();
+  }, [setUser]);
 
   return (
     <nav className='navbar navbar-dark bg-primary justify-content-between p-2'>
@@ -26,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
       {user ? (
         <div>
           {user?.status === AccountStatus.NOT_PAID && (
-            <button type='button' className='btn btn-warning'>
+            <button type='button' className='btn btn-warning' onClick={goToPayment}>
               Pay subscription
             </button>
           )}

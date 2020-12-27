@@ -31,7 +31,7 @@ router.get('/download/:id', async (request, response) => {
     const data = await VariableInstance.getVariableData(id);
     response
       .writeHead(200, {
-        'Content-Disposition': `attachment; filename="${variable.valueInfo.filename}"`,
+        'Content-Disposition': `inline; filename="${variable.valueInfo.filename}"`,
         'Content-Type': variable.valueInfo.mimeType,
       })
       .end(data, 'binary');

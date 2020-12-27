@@ -103,6 +103,11 @@ execution.setVariable('votes', votes);</camunda:script>
               <camunda:value id="voteNo" name="No" />
               <camunda:value id="voteMoreInfo" name="More info" />
             </camunda:formField>
+            <camunda:formField id="files">
+              <camunda:properties>
+                <camunda:property id="inputType" value="reviewList" />
+              </camunda:properties>
+            </camunda:formField>
           </camunda:formData>
           <camunda:executionListener event="end">
             <camunda:script scriptFormat="JavaScript">var votes = execution.getVariable('votes');

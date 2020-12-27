@@ -28,4 +28,10 @@ router.post('/message', async (request, response) => {
   flag ? response.json(true).end() : response.status(400).end();
 });
 
+router.get('/variables', async (request, response) => {
+  const { processId, messageName } = request.body;
+  const flag = await ProcessInstance.sendMessage(processId, messageName);
+  flag ? response.json(true).end() : response.status(400).end();
+});
+
 export default router;

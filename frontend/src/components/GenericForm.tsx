@@ -9,7 +9,11 @@ interface GenericFormProps {
   handleSubmit: (e: SyntheticEvent) => void;
 }
 
-const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, handleSubmit }) => {
+const GenericForm: React.FC<GenericFormProps> = ({
+  formState,
+  setFormState,
+  handleSubmit,
+}) => {
   const handleSetState = (name: string, variable: any) => {
     setFormState({
       ...formState,
@@ -26,16 +30,18 @@ const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, hand
   }
 
   return (
-    <div className="row justify-content-between container mx-auto">
-      <div className="col bg-white p-0">
-        <img className="rounded h-100" src={logo} alt="" />
+    <div className='row justify-content-between container mx-auto'>
+      <div className='col bg-white p-0'>
+        <img className='rounded h-100' src={logo} alt='' />
       </div>
-      <div className="col px-4 bg-white">
+      <div className='col px-4 bg-white'>
         <form onSubmit={handleSubmit}>
           {fields.map((formField, i) => (
             <GenericFormField key={i} formField={formField} setFormState={handleSetState} />
           ))}
-          <button type='submit' className="btn btn-primary w-100 mb-3">Submit</button>
+          <button type='submit' className='btn btn-primary w-100 mb-3'>
+            Submit
+          </button>
         </form>
       </div>
     </div>

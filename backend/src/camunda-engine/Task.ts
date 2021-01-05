@@ -2,11 +2,12 @@ import axios from 'axios';
 import { CAMUNDA_API } from '../config/config';
 import { createJsonOptions } from '../util/requestUtil';
 
-const getTask = async (processID: string) => {
+const getTask = async (processID: string, assignee: string) => {
   console.log(CAMUNDA_API);
   const options = createJsonOptions();
   const data = {
     processInstanceId: processID,
+    assignee: assignee ? assignee : undefined,
   };
   const result = await axios.post(`${CAMUNDA_API}/task`, data, options);
   return result.data;

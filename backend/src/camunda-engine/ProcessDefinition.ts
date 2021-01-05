@@ -14,7 +14,12 @@ const startProcessInstance = async (key: string) => {
 };
 
 const submitStartForm = async (key: string, data) => {
-  const result = await axios.post(`${CAMUNDA_API}/process-definition/key/${key}/submit-form`, data);
+  const options = createJsonOptions();
+  const result = await axios.post(
+    `${CAMUNDA_API}/process-definition/key/${key}/submit-form`,
+    data,
+    options
+  );
   return result.data;
 };
 

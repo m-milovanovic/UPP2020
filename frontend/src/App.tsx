@@ -32,7 +32,7 @@ function App() {
           <UserHome />
         </PrivateRoute>
         <PrivateRoute path='/user/tasks/:id' user={user}>
-          <TaskForm user={user}/>
+          <TaskForm />
         </PrivateRoute>
         <PrivateRoute path='/payment' user={user}>
           <Payment />

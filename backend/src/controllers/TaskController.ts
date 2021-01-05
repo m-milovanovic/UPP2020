@@ -7,6 +7,20 @@ import { FormVariable } from '../types';
 
 const router = express.Router();
 
+router.get('/id/:id', async (request, response) => {
+  const taskID = request.params.id;
+  const task = await Task.getTaskById(taskID);
+  if (!task) {
+    response.status(404).end();
+    return;
+  }
+  if (task.assignee && task.assignee !== request['userInfo'].username) {
+    response.status(401).end();
+    return;
+  }
+  response.json(task);
+});
+
 router.get('/:id/formVariables', async (request, response) => {
   const taskID = request.params.id;
   const task = await Task.getTaskById(taskID);
@@ -69,11 +83,12 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
       label: <string>field.label,
       constraints: constraints,
       unique: field.properties.unique,
+      value: field.defaultValue ? field.defaultValue : '',
     };
-    if (field.properties.inputType === 'multiselect') {
-      variable.options = EnumService.getOptions(field.properties.options);
-    } else if (field.type.values) {
+    if (field.type.values && Object.keys(field.type.values).length > 0) {
       variable.options = Object.keys(field.type.values);
+    } else if (field.type.values || field.properties.inputType === 'multiselect') {
+      variable.options = EnumService.getOptions(field.properties.options);
     }
     return variable;
   });

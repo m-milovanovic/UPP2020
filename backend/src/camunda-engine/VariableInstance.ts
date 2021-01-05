@@ -23,7 +23,7 @@ const getVariables = async (varNameLike: string, processInstanceId: string) => {
   };
   const result = await axios.post(
     `${CAMUNDA_API}/variable-instance`,
-    { variableNameLike: varNameLike, processInstanceId: processInstanceId },
+    { variableNameLike: varNameLike, processInstanceIdIn: [processInstanceId] },
     options
   );
   return result.data;

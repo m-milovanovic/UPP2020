@@ -28,6 +28,7 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
       case 'string':
       case 'password':
       case 'email':
+      case 'multitext':
         variable.value = (e.target as HTMLInputElement).value;
         break;
       case 'number':
@@ -144,6 +145,18 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({ formField, setFormS
       {inputType === 'email' && (
         <input
           type='email'
+          className='form-control'
+          value={value}
+          name={name}
+          onChange={onChange}
+          placeholder={label}
+          {...constraints}
+        />
+      )}
+      {inputType === 'multitext' && (
+        <textarea
+          rows={10}
+          cols={6}
           className='form-control'
           value={value}
           name={name}

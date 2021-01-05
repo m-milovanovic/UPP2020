@@ -14,9 +14,9 @@ const Login: React.FC<LoginProps> = ({ setUser }) => {
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  const handleLogin = (event: React.FormEvent) => {
+  const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
-    AuthService.login(username, password).then((response) => {
+    AuthService.login(username, password).then(async (response) => {
       LocalStorageService.setJwt(response.data);
       setUser(jwt_decode(response.data));
       history.push('/user');

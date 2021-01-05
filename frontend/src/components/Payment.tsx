@@ -1,10 +1,12 @@
 import { useHistory } from 'react-router-dom';
+import AuthService from '../services/AuthService';
 import PaymentService from '../services/PaymentService';
 
 const Payment = () => {
   const history = useHistory();
   const handlePayment = async () => {
     await PaymentService.paySubscription();
+    await AuthService.getUserData();
     history.push('/user');
   };
 

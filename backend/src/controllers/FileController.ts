@@ -1,14 +1,12 @@
 import express from 'express';
-import Task from '../camunda-engine/Task';
 import VariableInstance from '../camunda-engine/VariableInstance';
 
 const router = express.Router();
 
 router.get('/:id', async (request, response) => {
   try {
-    const taskId = request.params.id;
-    const task = await Task.getTaskById(taskId);
-    const variables = await VariableInstance.getVariables('review%', task.processInstanceId);
+    const processId = request.params.id;
+    const variables = await VariableInstance.getVariables('review%', processId);
     response
       .json(
         variables.map((variable) => {

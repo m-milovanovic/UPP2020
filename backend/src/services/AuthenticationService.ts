@@ -15,11 +15,11 @@ const generateToken = (user) => {
     status: user.status,
   };
   if (user instanceof Writer) {
-    infoForToken.type = 'Writer';
+    infoForToken.type = 'writer';
   } else if (user instanceof Reader) {
-    infoForToken.type = 'Reader';
+    infoForToken.type = 'reader';
   } else {
-    infoForToken.type = 'BoardMember';
+    infoForToken.type = 'boardMember';
   }
 
   return jwt.sign(infoForToken, SECRET);
@@ -70,15 +70,15 @@ const authenticate = async (username: string, password: string) => {
 const getUserData = async (username: string) => {
   const reader: Reader = await ReaderService.findByUsername(username);
   if (reader) {
-    return reader;
+    return { ...reader, type: 'reader' };
   }
   const writer: Writer = await WriterService.findByUsername(username);
   if (writer) {
-    return writer;
+    return { ...writer, type: 'writer' };
   }
   const boardMember: BoardMember = await BoardMemberService.findByUsername(username);
   if (boardMember) {
-    return boardMember;
+    return { ...boardMember, type: 'boardMember' };
   }
   return null;
 };

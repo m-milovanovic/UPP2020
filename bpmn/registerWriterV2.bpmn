@@ -8,7 +8,7 @@
     <bpmn:userTask id="Activity_0e8id7z" name="Submit papers" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="papers" type="string">
+          <camunda:formField id="papers" label="Upload Files" type="string">
             <camunda:properties>
               <camunda:property id="inputType" value="multifile" />
             </camunda:properties>
@@ -115,6 +115,9 @@ execution.setVariable('votes', votes);</camunda:script>
           <camunda:taskListener event="complete">
             <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
           </camunda:taskListener>
+          <camunda:taskListener event="create">
+            <camunda:script scriptFormat="JavaScript">task.name = "Review submission and vote: " + username</camunda:script>
+          </camunda:taskListener>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_11ktc05</bpmn:incoming>
         <bpmn:outgoing>Flow_1bbxsdh</bpmn:outgoing>
@@ -145,7 +148,7 @@ execution.setVariable("counter", i);</camunda:script>
             <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
           </camunda:taskListener>
           <camunda:formData>
-            <camunda:formField id="papers" type="string">
+            <camunda:formField id="papers" label="Upload Files" type="string">
               <camunda:properties>
                 <camunda:property id="inputType" value="multifile" />
               </camunda:properties>

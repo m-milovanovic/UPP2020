@@ -65,6 +65,7 @@ const validateConstraints = async (data: any, variables: FormVariable[]) => {
     }
     if (variable.options) {
       const value = data[variable.name]?.value;
+      console.log(variable.name)
       if (Array.isArray(value)) {
         value.forEach((item) => {
           if (!variable.options.includes(item)) {

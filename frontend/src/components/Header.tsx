@@ -3,6 +3,8 @@ import { Link, useHistory } from 'react-router-dom';
 import { AccountStatus } from '../interfaces';
 import AuthService from '../services/AuthService';
 import LocalStorageService from '../services/LocalStorageService';
+import ProcessService from '../services/ProcessService';
+import jwt_decode from 'jwt-decode';
 
 interface HeaderProps {
   user: any;
@@ -22,6 +24,16 @@ const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
     history.push('/payment');
   };
 
+  const startPublish = async () => {
+    const processId = await ProcessService.startProcess('publishBook', user.username);
+    const activeTaskId = await ProcessService.getActiveTaskId(processId);
+    if (activeTaskId) {
+      history.push(`/user/tasks/${activeTaskId}`);
+    } else {
+      history.push('/user');
+    }
+  };
+
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -39,8 +51,13 @@ const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
       </Link>
       {user ? (
         <div>
+          {user?.type === 'writer' && user?.status === AccountStatus.ACTIVATED && (
+            <button type='button' className='btn btn-warning' onClick={startPublish}>
+              Publish
+            </button>
+          )}
           {user?.status === AccountStatus.NOT_PAID && (
-            <button type='button' className='btn btn-warning' onClick={goToPayment}>
+            <button type='button' className='btn btn-danger' onClick={goToPayment}>
               Pay subscription
             </button>
           )}

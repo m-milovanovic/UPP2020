@@ -1,24 +1,14 @@
-import { useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { AccountStatus } from '../interfaces';
-import AuthService from '../services/AuthService';
-import LocalStorageService from '../services/LocalStorageService';
 import ProcessService from '../services/ProcessService';
-import jwt_decode from 'jwt-decode';
 
 interface HeaderProps {
   user: any;
-  setUser: any;
+  handleLogout: any;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
-  const history = useHistory();
-
-  const handleLogout = () => {
-    LocalStorageService.removeJwt();
-    setUser(null);
-    history.push('/login');
-  };
+const Header: React.FC<HeaderProps> = ({ user, handleLogout }) => {
+  const history = useHistory();  
 
   const goToPayment = () => {
     history.push('/payment');
@@ -34,15 +24,7 @@ const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
     }
   };
 
-  useEffect(() => {
-    const getUserData = async () => {
-      try {
-        const userData = await AuthService.getUserData();
-        setUser(userData);
-      } catch (error) {}
-    };
-    getUserData();
-  }, [setUser]);
+  
 
   return (
     <nav className='navbar navbar-dark bg-primary justify-content-between p-2'>

@@ -35,6 +35,7 @@ router.get('/:id/activeTask', async (request, response) => {
 
 router.post('/message', async (request, response) => {
   const { processId, messageName } = request.body;
+  console.log(processId, messageName)
   const flag = await ProcessInstance.sendMessage(processId, messageName);
   flag ? response.json(true).end() : response.status(400).end();
 });

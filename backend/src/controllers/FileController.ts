@@ -1,12 +1,13 @@
-import express from 'express';
-import VariableInstance from '../camunda-engine/VariableInstance';
+import express from "express";
+import VariableInstance from "../camunda-engine/VariableInstance";
+//import { CAMUNDA_API } from "../config/config";
 
 const router = express.Router();
 
-router.get('/:id', async (request, response) => {
+router.get("/:id", async (request, response) => {
   try {
     const processId = request.params.id;
-    const variables = await VariableInstance.getVariables('review%', processId);
+    const variables = await VariableInstance.getVariables("review%", processId);
     response
       .json(
         variables.map((variable) => {
@@ -22,17 +23,15 @@ router.get('/:id', async (request, response) => {
   }
 });
 
-router.get('/download/:id', async (request, response) => {
+router.get("/download/:id", async (request, response) => {
   try {
     const id = request.params.id;
     const variable = await VariableInstance.getVariableById(id);
-    const data = await VariableInstance.getVariableData(id);
-    response
-      .writeHead(200, {
-        'Content-Disposition': `inline; filename="${variable.valueInfo.filename}"`,
-        'Content-Type': variable.valueInfo.mimeType,
-      })
-      .end(data, 'binary');
+    response.setHeader(
+      "Content-Disposition",
+      `inline; filename="${variable.valueInfo.filename}"`
+    );
+    (await VariableInstance.getVariableDataStream(id)).pipe(response);
   } catch (error) {
     response.status(400).json(error);
   }

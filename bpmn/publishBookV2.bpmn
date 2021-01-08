@@ -14,12 +14,12 @@
         <bpmn:flowNodeRef>Activity_1588fn9</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_08ber9c" name="Main Editor">
-        <bpmn:flowNodeRef>Activity_19e7y7y</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_1j7vaxv</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_0bff45c</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_1cjv0pn</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_17mnlpe</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_1x44cua</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_19e7y7y</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_1sebm5n" name="Editor">
         <bpmn:flowNodeRef>Activity_0ss9ssi</bpmn:flowNodeRef>
@@ -30,7 +30,6 @@
         <bpmn:flowNodeRef>Gateway_0qsvcbm</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_0f9aa3m</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_06ha0m2</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_0rp2b1o</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_1ew6vev</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_062w9l2</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_15vao6m</bpmn:flowNodeRef>
@@ -53,6 +52,7 @@
         <bpmn:flowNodeRef>Gateway_1mnxz02</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_0r3frum</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Event_0698i0h</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0rp2b1o</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:serviceTask id="Activity_0ss9ssi" name="Get beta readers" camunda:type="external" camunda:topic="getBetaReaders">
@@ -94,7 +94,7 @@ formFields.get(0).getProperties().put("options", "parsearray-" + betaReaderOptio
     <bpmn:userTask id="Activity_1wd8ste" name="Is original?" camunda:assignee="${editor}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="original" label="Is original?" type="boolean" />
+          <camunda:formField id="original" label="Is original?" type="boolean" defaultValue="false" />
           <camunda:formField id="viewPlagiarisedSources" label="Potential plagiarised sources" type="string" defaultValue="${plagiarisedSources}">
             <camunda:properties>
               <camunda:property id="inputType" value="multitext" />
@@ -117,7 +117,7 @@ formFields.get(0).getProperties().put("options", "parsearray-" + betaReaderOptio
     <bpmn:userTask id="Activity_0ccyhk6" name="Approve" camunda:assignee="${editor}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="approve" label="Approve book?" type="boolean" />
+          <camunda:formField id="approve" label="Approve book?" type="boolean" defaultValue="false" />
         </camunda:formData>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -134,13 +134,13 @@ formFields.get(0).getProperties().put("options", "parsearray-" + betaReaderOptio
       <bpmn:outgoing>Flow_1fmibb8</bpmn:outgoing>
       <bpmn:outgoing>Flow_1q2n61u</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:serviceTask id="Activity_1e5ctzv" name="Check for potential plagiarism" camunda:expression="checkForPlagiarism">
+    <bpmn:serviceTask id="Activity_1e5ctzv" name="Check for potential plagiarism" camunda:type="external" camunda:topic="checkForPlagiarism">
       <bpmn:incoming>Flow_004okiq</bpmn:incoming>
       <bpmn:outgoing>Flow_0kq426e</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_19e7y7y" name="Notify main editor" camunda:type="external" camunda:topic="notifyMainAutor">
-      <bpmn:incoming>Flow_0x4ml11</bpmn:incoming>
-      <bpmn:outgoing>Flow_02nldxi</bpmn:outgoing>
+    <bpmn:serviceTask id="Activity_19e7y7y" name="Notify main editor" camunda:type="external" camunda:topic="notifyMainEditor">
+      <bpmn:incoming>Flow_05c3p7q</bpmn:incoming>
+      <bpmn:outgoing>Flow_1op4sg2</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:userTask id="Activity_0qs5bq2" name="Enter book details" camunda:assignee="${username}">
       <bpmn:extensionElements>
@@ -176,7 +176,7 @@ formFields.get(0).getProperties().put("options", "parsearray-" + betaReaderOptio
         </camunda:taskListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1daw59w</bpmn:incoming>
-      <bpmn:outgoing>Flow_0x4ml11</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0l6dr0c</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:extensionElements>
@@ -199,10 +199,10 @@ formFields.get(0).getProperties().put("options", "parsearray-" + betaReaderOptio
           </camunda:formField>
         </camunda:formData>
         <camunda:executionListener event="end">
-          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariable("paper")
+          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
-var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(paper.value))).mimeType(paper.valueInfo.mimetype).encoding(paper.valueInfo.encoding).create();
-execution.setVariable("review", fValue);</camunda:script>
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
+execution.setVariable("review",fValue);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -286,7 +286,7 @@ execution.setVariable("review", fValue);</camunda:script>
               <camunda:constraint name="readonly" config="true" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="approve" label="Approve synopsis" type="boolean" />
+          <camunda:formField id="approve" label="Approve synopsis" type="boolean" defaultValue="false" />
         </camunda:formData>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -298,12 +298,12 @@ execution.setVariable("review", fValue);</camunda:script>
           <camunda:script scriptFormat="JavaScript">task.name = "Review book: " + title;</camunda:script>
         </camunda:taskListener>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0xty7dm</bpmn:incoming>
+      <bpmn:incoming>Flow_1op4sg2</bpmn:incoming>
       <bpmn:outgoing>Flow_0iqx1fm</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_0rp2b1o" name="Get editor" camunda:type="external" camunda:topic="getEditor">
-      <bpmn:incoming>Flow_02nldxi</bpmn:incoming>
-      <bpmn:outgoing>Flow_0xty7dm</bpmn:outgoing>
+    <bpmn:serviceTask id="Activity_0rp2b1o" name="Get necessary data" camunda:type="external" camunda:topic="getPeople">
+      <bpmn:incoming>Flow_0l6dr0c</bpmn:incoming>
+      <bpmn:outgoing>Flow_05c3p7q</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:boundaryEvent id="Event_0698i0h" attachedToRef="Activity_0r3frum">
       <bpmn:outgoing>Flow_1mn1t37</bpmn:outgoing>
@@ -325,8 +325,6 @@ execution.setVariable("review", fValue);</camunda:script>
     <bpmn:sequenceFlow id="Flow_07z9wto" sourceRef="Activity_0ccyhk6" targetRef="Gateway_08le3x0" />
     <bpmn:sequenceFlow id="Flow_0t53txm" sourceRef="Activity_1udd7ru" targetRef="Activity_1588fn9" />
     <bpmn:sequenceFlow id="Flow_15pkpne" sourceRef="Activity_1588fn9" targetRef="Activity_0po944q" />
-    <bpmn:sequenceFlow id="Flow_0x4ml11" sourceRef="Activity_0qs5bq2" targetRef="Activity_19e7y7y" />
-    <bpmn:sequenceFlow id="Flow_02nldxi" sourceRef="Activity_19e7y7y" targetRef="Activity_0rp2b1o" />
     <bpmn:sequenceFlow id="Flow_1daw59w" sourceRef="StartEvent_1" targetRef="Activity_0qs5bq2" />
     <bpmn:sequenceFlow id="Flow_1mn1t37" sourceRef="Event_0698i0h" targetRef="Gateway_0z9x0q8" />
     <bpmn:sequenceFlow id="Flow_14bcqn4" name="Approve" sourceRef="Gateway_0f9aa3m" targetRef="Activity_0r3frum">
@@ -334,7 +332,6 @@ execution.setVariable("review", fValue);</camunda:script>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1f0q1t8" name="Not approve" sourceRef="Gateway_0f9aa3m" targetRef="Activity_15vao6m" />
     <bpmn:sequenceFlow id="Flow_0iqx1fm" sourceRef="Activity_06ha0m2" targetRef="Gateway_0f9aa3m" />
-    <bpmn:sequenceFlow id="Flow_0xty7dm" sourceRef="Activity_0rp2b1o" targetRef="Activity_06ha0m2" />
     <bpmn:exclusiveGateway id="Gateway_0z9x0q8" default="Flow_04f5ct4">
       <bpmn:incoming>Flow_1mn1t37</bpmn:incoming>
       <bpmn:incoming>Flow_0l75o7f</bpmn:incoming>
@@ -399,7 +396,7 @@ execution.setVariable("reviewAnnotated", fValue);</camunda:script>
       <bpmn:incoming>Flow_15pkpne</bpmn:incoming>
       <bpmn:outgoing>Flow_06zznvl</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_0hkpzhz" name="Upload the book">
+    <bpmn:userTask id="Activity_0hkpzhz" name="Upload the book" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="paper" label="Upload the book" type="string">
@@ -412,10 +409,10 @@ execution.setVariable("reviewAnnotated", fValue);</camunda:script>
           </camunda:formField>
         </camunda:formData>
         <camunda:executionListener event="end">
-          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariable("paper")
+          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
-var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(paper.value))).mimeType(paper.valueInfo.mimetype).encoding(paper.valueInfo.encoding).create();
-execution.setVariable("review", fValue);</camunda:script>
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
+execution.setVariable("review",fValue);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -430,7 +427,7 @@ execution.setVariable("review", fValue);</camunda:script>
     <bpmn:userTask id="Activity_062w9l2" name="More edits?" camunda:assignee="${editor}">
       <bpmn:extensionElements>
         <camunda:formData>
-          <camunda:formField id="moreEdits" label="More edits needed?" type="boolean" />
+          <camunda:formField id="moreEdits" label="More edits needed?" type="boolean" defaultValue="false" />
         </camunda:formData>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -463,7 +460,7 @@ execution.setVariable("review", fValue);</camunda:script>
               <camunda:constraint name="required" config="true" />
             </camunda:validation>
           </camunda:formField>
-          <camunda:formField id="allGoodLecturer" label="No errors" type="boolean" />
+          <camunda:formField id="allGoodLecturer" label="No errors" type="boolean" defaultValue="false" />
         </camunda:formData>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -483,7 +480,7 @@ execution.setVariable("review_annotated",fValue);</camunda:script>
       <bpmn:incoming>Flow_1l2qjg9</bpmn:incoming>
       <bpmn:outgoing>Flow_1m8wr8t</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1hefczn" name="Upload the book">
+    <bpmn:userTask id="Activity_1hefczn" name="Upload the book" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="paper" label="Upload the book" type="string">
@@ -496,10 +493,10 @@ execution.setVariable("review_annotated",fValue);</camunda:script>
           </camunda:formField>
         </camunda:formData>
         <camunda:executionListener event="end">
-          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariable("paper")
+          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
-var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(paper.value))).mimeType(paper.valueInfo.mimetype).encoding(paper.valueInfo.encoding).create();
-execution.setVariable("review", fValue);</camunda:script>
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
+execution.setVariable("review",fValue);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -521,11 +518,11 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmn:incoming>Flow_1070kr6</bpmn:incoming>
       <bpmn:outgoing>Flow_1l2qjg9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Activity_17mnlpe" name="Give suggestions">
+    <bpmn:userTask id="Activity_17mnlpe" name="Give suggestions" camunda:assignee="${mainEditor}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="suggestions" label="Suggestions" type="string" />
-          <camunda:formField id="allGoodMainEditor" label="Add to repository" type="boolean" />
+          <camunda:formField id="allGoodMainEditor" label="Add to repository" type="boolean" defaultValue="false" />
         </camunda:formData>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -547,7 +544,7 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmn:incoming>Flow_1npw83q</bpmn:incoming>
       <bpmn:outgoing>Flow_1kd8up1</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Activity_0a30muj" name="Upload the book">
+    <bpmn:userTask id="Activity_0a30muj" name="Upload the book" camunda:assignee="${username}">
       <bpmn:extensionElements>
         <camunda:formData>
           <camunda:formField id="paper" label="Upload the book" type="string">
@@ -566,10 +563,10 @@ execution.setVariable("review", fValue);</camunda:script>
           <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
         </camunda:taskListener>
         <camunda:executionListener event="end">
-          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariable("paper")
+          <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
-var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(paper.value))).mimeType(paper.valueInfo.mimetype).encoding(paper.valueInfo.encoding).create();
-execution.setVariable("review", fValue);</camunda:script>
+var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
+execution.setVariable("review",fValue);</camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0tw1mn5</bpmn:incoming>
@@ -584,6 +581,11 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmn:outgoing>Flow_19ai4tm</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:subProcess id="Activity_1588fn9" name="Give comments">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("allComments", new java.util.ArrayList());</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0t53txm</bpmn:incoming>
       <bpmn:outgoing>Flow_15pkpne</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics camunda:collection="${betaReaders}" camunda:elementVariable="betaReader" />
@@ -606,6 +608,12 @@ execution.setVariable("review", fValue);</camunda:script>
           <camunda:taskListener event="complete">
             <camunda:script scriptFormat="JavaScript">task.execution.removeVariable(task.getId());</camunda:script>
           </camunda:taskListener>
+          <camunda:executionListener event="end">
+            <camunda:script scriptFormat="JavaScript">var allComments = execution.getVariable("allComments");
+allComments.add(comments)
+
+execution.setVariable("allComments", allComments);</camunda:script>
+          </camunda:executionListener>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0tv1oy6</bpmn:incoming>
         <bpmn:outgoing>Flow_16iiesf</bpmn:outgoing>
@@ -641,7 +649,6 @@ execution.setVariable("review", fValue);</camunda:script>
         <bpmn:outgoing>Flow_1mpsiqn</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="Flow_1dai3wh" name="No" sourceRef="Gateway_0dfbgb5" targetRef="Gateway_1tz9ulj" />
-      <bpmn:sequenceFlow id="Flow_1mpsiqn" sourceRef="Activity_1ekcek2" targetRef="Activity_0uuujct" />
       <bpmn:serviceTask id="Activity_0uuujct" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
         <bpmn:incoming>Flow_1mpsiqn</bpmn:incoming>
         <bpmn:outgoing>Flow_1rgyk8l</bpmn:outgoing>
@@ -657,6 +664,7 @@ execution.setVariable("review", fValue);</camunda:script>
         <bpmn:incoming>Flow_1vh02yq</bpmn:incoming>
       </bpmn:endEvent>
       <bpmn:sequenceFlow id="Flow_1vh02yq" sourceRef="Gateway_0hcmunc" targetRef="Event_04bosv9" />
+      <bpmn:sequenceFlow id="Flow_1mpsiqn" sourceRef="Activity_1ekcek2" targetRef="Activity_0uuujct" />
     </bpmn:subProcess>
     <bpmn:exclusiveGateway id="Gateway_0xo7oav" default="Flow_16pjpbk">
       <bpmn:incoming>Flow_0knc3b3</bpmn:incoming>
@@ -673,6 +681,9 @@ execution.setVariable("review", fValue);</camunda:script>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0rdd51i" sourceRef="Gateway_1mnxz02" targetRef="Activity_00gvg6i" />
     <bpmn:sequenceFlow id="Flow_09f75jn" sourceRef="Event_1gvylr6" targetRef="Gateway_1mnxz02" />
+    <bpmn:sequenceFlow id="Flow_05c3p7q" sourceRef="Activity_0rp2b1o" targetRef="Activity_19e7y7y" />
+    <bpmn:sequenceFlow id="Flow_1op4sg2" sourceRef="Activity_19e7y7y" targetRef="Activity_06ha0m2" />
+    <bpmn:sequenceFlow id="Flow_0l6dr0c" sourceRef="Activity_0qs5bq2" targetRef="Activity_0rp2b1o" />
     <bpmn:textAnnotation id="TextAnnotation_105em3a">
       <bpmn:text>OGRANICITI OVAJ LOOP</bpmn:text>
     </bpmn:textAnnotation>
@@ -681,6 +692,13 @@ execution.setVariable("review", fValue);</camunda:script>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1c1l1hg" sourceRef="Gateway_083t2sb" targetRef="TextAnnotation_1q128q4" />
     <bpmn:association id="Association_12lvsgy" sourceRef="Gateway_1cjv0pn" targetRef="TextAnnotation_105em3a" />
+    <bpmn:textAnnotation id="TextAnnotation_05ra1th">
+      <bpmn:text>writer email
+editor
+main editor
+lecturer</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0s6f30m" sourceRef="Activity_0rp2b1o" targetRef="TextAnnotation_05ra1th" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="publishBook">
@@ -699,6 +717,20 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmndi:BPMNShape id="Lane_1furz71_di" bpmnElement="Lane_1furz71" isHorizontal="true">
         <dc:Bounds x="182" y="589" width="4456" height="120" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0l6dr0c_di" bpmnElement="Flow_0l6dr0c">
+        <di:waypoint x="430" y="280" />
+        <di:waypoint x="510" y="280" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1op4sg2_di" bpmnElement="Flow_1op4sg2">
+        <di:waypoint x="610" y="410" />
+        <di:waypoint x="640" y="410" />
+        <di:waypoint x="640" y="530" />
+        <di:waypoint x="670" y="530" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_05c3p7q_di" bpmnElement="Flow_05c3p7q">
+        <di:waypoint x="560" y="320" />
+        <di:waypoint x="560" y="370" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09f75jn_di" bpmnElement="Flow_09f75jn">
         <di:waypoint x="4030" y="222" />
         <di:waypoint x="4030" y="165" />
@@ -825,10 +857,6 @@ execution.setVariable("review", fValue);</camunda:script>
         <di:waypoint x="1190" y="530" />
         <di:waypoint x="1190" y="165" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0xty7dm_di" bpmnElement="Flow_0xty7dm">
-        <di:waypoint x="610" y="530" />
-        <di:waypoint x="670" y="530" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0iqx1fm_di" bpmnElement="Flow_0iqx1fm">
         <di:waypoint x="770" y="530" />
         <di:waypoint x="835" y="530" />
@@ -856,16 +884,6 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmndi:BPMNEdge id="Flow_1daw59w_di" bpmnElement="Flow_1daw59w">
         <di:waypoint x="268" y="280" />
         <di:waypoint x="330" y="280" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_02nldxi_di" bpmnElement="Flow_02nldxi">
-        <di:waypoint x="560" y="450" />
-        <di:waypoint x="560" y="490" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0x4ml11_di" bpmnElement="Flow_0x4ml11">
-        <di:waypoint x="430" y="280" />
-        <di:waypoint x="470" y="280" />
-        <di:waypoint x="470" y="410" />
-        <di:waypoint x="510" y="410" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_15pkpne_di" bpmnElement="Flow_15pkpne">
         <di:waypoint x="2620" y="740" />
@@ -952,6 +970,12 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="232" y="262" width="36" height="36" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0r3frum_di" bpmnElement="Activity_0r3frum">
+        <dc:Bounds x="980" y="240" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_15vao6m_di" bpmnElement="Activity_15vao6m">
+        <dc:Bounds x="980" y="490" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0f9aa3m_di" bpmnElement="Gateway_0f9aa3m" isMarkerVisible="true">
         <dc:Bounds x="835" y="505" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -962,7 +986,7 @@ execution.setVariable("review", fValue);</camunda:script>
         <dc:Bounds x="670" y="490" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0drfqgt_di" bpmnElement="Activity_0rp2b1o">
-        <dc:Bounds x="510" y="490" width="100" height="80" />
+        <dc:Bounds x="510" y="240" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0z9x0q8_di" bpmnElement="Gateway_0z9x0q8" isMarkerVisible="true">
         <dc:Bounds x="1165" y="115" width="50" height="50" />
@@ -1033,15 +1057,13 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmndi:BPMNShape id="Activity_1eohy5z_di" bpmnElement="Activity_1j7vaxv">
         <dc:Bounds x="4310" y="370" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_15vao6m_di" bpmnElement="Activity_15vao6m">
-        <dc:Bounds x="980" y="490" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0r3frum_di" bpmnElement="Activity_0r3frum">
-        <dc:Bounds x="980" y="240" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0azmgge_di" bpmnElement="Activity_1588fn9" isExpanded="true">
         <dc:Bounds x="1910" y="740" width="1038" height="280" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1mpsiqn_di" bpmnElement="Flow_1mpsiqn">
+        <di:waypoint x="2538" y="940" />
+        <di:waypoint x="2628" y="940" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1vh02yq_di" bpmnElement="Flow_1vh02yq">
         <di:waypoint x="2823" y="820" />
         <di:waypoint x="2890" y="820" />
@@ -1054,10 +1076,6 @@ execution.setVariable("review", fValue);</camunda:script>
         <di:waypoint x="2728" y="940" />
         <di:waypoint x="2798" y="940" />
         <di:waypoint x="2798" y="845" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1mpsiqn_di" bpmnElement="Flow_1mpsiqn">
-        <di:waypoint x="2538" y="940" />
-        <di:waypoint x="2628" y="940" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1dai3wh_di" bpmnElement="Flow_1dai3wh">
         <di:waypoint x="2328" y="915" />
@@ -1135,8 +1153,14 @@ execution.setVariable("review", fValue);</camunda:script>
       <bpmndi:BPMNShape id="TextAnnotation_1q128q4_di" bpmnElement="TextAnnotation_1q128q4">
         <dc:Bounds x="3750" y="540" width="100" height="40" />
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="TextAnnotation_05ra1th_di" bpmnElement="TextAnnotation_05ra1th">
+        <dc:Bounds x="610" y="160" width="150" height="68" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1wzersh_di" bpmnElement="Event_1gvylr6">
         <dc:Bounds x="4012" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0698i0h_di" bpmnElement="Event_0698i0h">
+        <dc:Bounds x="1012" y="222" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1c1l1hg_di" bpmnElement="Association_1c1l1hg">
         <di:waypoint x="3731" y="636" />
@@ -1146,9 +1170,10 @@ execution.setVariable("review", fValue);</camunda:script>
         <di:waypoint x="4211" y="396" />
         <di:waypoint x="4259" y="340" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_0698i0h_di" bpmnElement="Event_0698i0h">
-        <dc:Bounds x="1012" y="222" width="36" height="36" />
-      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0s6f30m_di" bpmnElement="Association_0s6f30m">
+        <di:waypoint x="598" y="240" />
+        <di:waypoint x="610" y="228" />
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

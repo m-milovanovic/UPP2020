@@ -10,7 +10,7 @@ router.get('', async (request, response) => {
     response.status(404).end();
   }
   try {
-    ProcessInstance.sendMessage(processInstance.id, 'subscriptionPaid');
+    await ProcessInstance.sendMessage(processInstance.id, 'subscriptionPaid');
     response.status(204).end();
   } catch (error) {
     response.status(400).json(error);

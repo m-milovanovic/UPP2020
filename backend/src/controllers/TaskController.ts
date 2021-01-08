@@ -83,13 +83,14 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
       label: <string>field.label,
       constraints: constraints,
       unique: field.properties.unique,
-      value: field.defaultValue ? field.defaultValue : '',
+      value: field.defaultValue,
     };
     if (field.type.values && Object.keys(field.type.values).length > 0) {
       variable.options = Object.keys(field.type.values);
     } else if (field.type.values || field.properties.inputType === 'multiselect') {
       variable.options = EnumService.getOptions(field.properties.options);
     }
+
     return variable;
   });
   return retVal;

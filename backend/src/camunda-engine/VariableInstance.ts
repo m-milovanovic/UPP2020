@@ -1,10 +1,10 @@
-import axios from 'axios';
-import { CAMUNDA_API } from '../config/config';
+import axios from "axios";
+import { CAMUNDA_API } from "../config/config";
 
 const getVariable = async (varName: string) => {
   const options = {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
   const result = await axios.post(
@@ -18,7 +18,7 @@ const getVariable = async (varName: string) => {
 const getVariables = async (varNameLike: string, processInstanceId: string) => {
   const options = {
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
   };
   const result = await axios.post(
@@ -34,6 +34,14 @@ const getVariableData = async (id: string) => {
   return result.data;
 };
 
+const getVariableDataStream = async (id: string) => {
+  const result = await axios.get(
+    `${CAMUNDA_API}/variable-instance/${id}/data`,
+    { responseType: "stream" }
+  );
+  return result.data;
+};
+
 const getVariableById = async (id: string) => {
   const result = await axios.get(`${CAMUNDA_API}/variable-instance/${id}`);
   return result.data;
@@ -43,5 +51,6 @@ export default {
   getVariables,
   getVariable,
   getVariableData,
-  getVariableById
+  getVariableById,
+  getVariableDataStream,
 };

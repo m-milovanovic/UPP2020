@@ -39,7 +39,7 @@ const getBetaReaders = () => {
     //TODO: pronaci beta readere po zanru
     variables.set(
       "betaReaderOptions",
-      '["milanReader","milanReader2","milanReader3"]'
+      '["betaReader1","betaReader2","betaReader3"]'
     );
     await taskService.complete(task, variables);
   });

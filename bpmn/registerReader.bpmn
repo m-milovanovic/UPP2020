@@ -119,9 +119,6 @@
       <bpmn:incoming>Flow_1l3v30k</bpmn:incoming>
       <bpmn:outgoing>Flow_01y5iri</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:endEvent id="Event_15iinxj">
-      <bpmn:incoming>Flow_0x2pp01</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:exclusiveGateway id="Gateway_052hr16" default="Flow_0irsmzd">
       <bpmn:incoming>Flow_01y5iri</bpmn:incoming>
       <bpmn:outgoing>Flow_0irsmzd</bpmn:outgoing>
@@ -162,6 +159,9 @@
       <bpmn:incoming>Flow_0irsmzd</bpmn:incoming>
       <bpmn:outgoing>Flow_08f60wt</bpmn:outgoing>
     </bpmn:userTask>
+    <bpmn:endEvent id="Event_15iinxj">
+      <bpmn:incoming>Flow_0x2pp01</bpmn:incoming>
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="Message_0lv13aj" name="ActivationLinkClicked" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">

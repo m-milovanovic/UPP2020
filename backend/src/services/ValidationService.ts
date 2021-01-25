@@ -65,7 +65,7 @@ const validateConstraints = async (data: any, variables: FormVariable[]) => {
     }
     if (variable.options) {
       const value = data[variable.name]?.value;
-      console.log(variable.name)
+      console.log(variable.name);
       if (Array.isArray(value)) {
         value.forEach((item) => {
           if (!variable.options.includes(item)) {
@@ -74,6 +74,13 @@ const validateConstraints = async (data: any, variables: FormVariable[]) => {
         });
       } else if (!variable.options.includes(value)) {
         errors[variable.name] = `Enum value must be one of [${variable.options}]`;
+      }
+    }
+    if (variable.minSize) {
+      const value = data[variable.name]?.value;
+      console.log(variable.name);
+      if (!Array.isArray(value) || value.length < variable.minSize) {
+        errors[variable.name] = `Value must have length of ${variable.minSize}`;
       }
     }
   }

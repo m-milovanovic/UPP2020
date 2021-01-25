@@ -6,8 +6,8 @@ import ReaderService from './ReaderService';
 import WriterService from './WriterService';
 import AccountStatus from '../entities/AccountStatus';
 import { SECRET } from '../config/config';
-import { BoardMember } from '../entities/BoardMember';
-import BoardMemberService from './BoardMemberService';
+import { Staff } from '../entities/Staff';
+import StaffService from './StaffService';
 
 const generateToken = (user) => {
   let infoForToken: any = {
@@ -19,7 +19,7 @@ const generateToken = (user) => {
   } else if (user instanceof Reader) {
     infoForToken.type = 'reader';
   } else {
-    infoForToken.type = 'boardMember';
+    infoForToken.type = 'staff';
   }
 
   return jwt.sign(infoForToken, SECRET);
@@ -50,13 +50,13 @@ const authenticate = async (username: string, password: string) => {
       };
     }
   }
-  const boardMember: BoardMember = await BoardMemberService.findByUsername(username);
-  if (boardMember) {
-    const ind: boolean = await bcrypt.compare(password, boardMember.password);
+  const staff: Staff = await StaffService.findByUsername(username);
+  if (staff) {
+    const ind: boolean = await bcrypt.compare(password, staff.password);
     if (ind) {
       return {
         ind: true,
-        token: await generateToken(boardMember),
+        token: await generateToken(staff),
       };
     }
   }
@@ -76,9 +76,9 @@ const getUserData = async (username: string) => {
   if (writer) {
     return { ...writer, type: 'writer' };
   }
-  const boardMember: BoardMember = await BoardMemberService.findByUsername(username);
-  if (boardMember) {
-    return { ...boardMember, type: 'boardMember' };
+  const staff: Staff = await StaffService.findByUsername(username);
+  if (staff) {
+    return { ...staff, type: 'staff' };
   }
   return null;
 };

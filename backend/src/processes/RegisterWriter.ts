@@ -1,8 +1,9 @@
 import { Variables } from 'camunda-external-task-client-js';
 import { createNotificationMail } from '../../resources/notifications/RegisterWriter';
 import client from '../CamundaClient';
-import { BoardMember } from '../entities/BoardMember';
+import { Staff } from '../entities/Staff';
 import { Writer } from '../entities/Writer';
+import StaffRole from '../entities/StaffRole';
 import MailService from '../services/MailService';
 import WriterService from '../services/WriterService';
 
@@ -33,7 +34,7 @@ const confirmWritersMail = () => {
 const getReviewers = () => {
   client.subscribe('getBoardMembers', async function ({ task, taskService }) {
     console.log('Get board members');
-    const boardMembers = await BoardMember.find({ take: 3 });
+    const boardMembers = await Staff.find({ take: 3, where: { role: StaffRole.BOARD_MEMBER } });
     const variables = new Variables();
     variables.set(
       'boardMembersExt',
@@ -54,12 +55,15 @@ const approveWriter = () => {
 
 const sendNotification = () => {
   client.subscribe('sendNotification', async function ({ task, taskService }) {
+    const email = task.variables.get('notificationEmail');
+    const subject = task.variables.get('notificationSubject');
     const notificationText = task.variables.get('notificationText');
-    const email = task.variables.get('email');
-    const { subject, html } = createNotificationMail(
-      'Literary association notification',
-      notificationText
-    );
+    const html = createNotificationMail(notificationText);
+    console.log('-----EMAIL-------');
+    console.log('Email:', email);
+    console.log('Subject:', subject);
+    console.log('Content', html)
+    console.log('-----------------');
     await MailService.send(email, subject, html);
     await taskService.complete(task);
   });

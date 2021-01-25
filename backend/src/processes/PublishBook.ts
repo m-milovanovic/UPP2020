@@ -1,5 +1,7 @@
 import { Variables } from "camunda-external-task-client-js";
 import client from "../CamundaClient";
+import PlagiarismService from "../services/PlagiarismService";
+import ReaderService from "../services/ReaderService";
 
 const getPeople = () => {
   client.subscribe("getPeople", async function ({ task, taskService }) {
@@ -26,7 +28,7 @@ const checkForPlagiarism = () => {
     async function ({ task, taskService }) {
       console.log("Check for plagiarsim");
       const variables = new Variables();
-      variables.set("plagiarisedSources", "source1\nsource2\nsource3");
+      variables.set("plagiarisedSources", PlagiarismService.getRandomSouces().join('\n'));
       await taskService.complete(task, variables);
     }
   );
@@ -37,9 +39,11 @@ const getBetaReaders = () => {
     console.log("Get beta readers");
     const variables = new Variables();
     //TODO: pronaci beta readere po zanru
+    const genre = task.variables.get('genre')
+    const betaReaders = await ReaderService.getBetaReadersByGenre(genre)
     variables.set(
       "betaReaderOptions",
-      '["betaReader1","betaReader2","betaReader3"]'
+      JSON.stringify(betaReaders.map(reader => reader.username))
     );
     await taskService.complete(task, variables);
   });

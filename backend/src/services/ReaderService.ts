@@ -7,7 +7,7 @@ import CamundaGroupService from '../camunda-engine/Group';
 import { createCamundaUser } from '../util/requestUtil';
 
 const findByUsername = async (username: string) => {
-  return await Reader.findOne({username})
+  return await Reader.findOne({ username })
 }
 
 const save = async (reader: Reader) => {
@@ -24,4 +24,9 @@ const activateAccount = async (username: string) => {
   await Reader.save(reader);
 };
 
-export default { findByUsername, save, activateAccount };
+const getBetaReadersByGenre = async (genre: string) => {
+  const readers: Reader[] = await Reader.find()
+  return readers.filter(reader => reader.betaGenres.includes(genre))
+}
+
+export default { findByUsername, save, activateAccount, getBetaReadersByGenre };

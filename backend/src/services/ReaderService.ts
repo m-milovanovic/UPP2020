@@ -27,4 +27,16 @@ const getBetaReadersByGenre = async (genre: string) => {
   return readers.filter(reader => reader.betaGenres.includes(genre))
 }
 
-export default { findByUsername, save, activateAccount, getBetaReadersByGenre };
+const addPenaltyPoint = async (username: string) => {
+  const reader: Reader = await findByUsername(username)
+  reader.penaltyPoints += 1
+  return await Reader.save(reader);
+}
+
+const revokeBetaStatus = async (username) => {
+  const reader: Reader = await findByUsername(username)
+  reader.beta = false
+  return await Reader.save(reader)
+}
+
+export default { findByUsername, save, activateAccount, getBetaReadersByGenre, addPenaltyPoint, revokeBetaStatus };

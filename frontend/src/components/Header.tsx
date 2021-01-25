@@ -14,8 +14,8 @@ const Header: React.FC<HeaderProps> = ({ user, handleLogout }) => {
     history.push('/payment');
   };
 
-  const startPublish = async () => {
-    const processId = await ProcessService.startProcess('publishBook', user.username);
+  const startProcess = (processName: string) => async () =>{
+    const processId = await ProcessService.startProcess(processName, user.username);
     const activeTaskId = await ProcessService.getActiveTaskId(processId);
     if (activeTaskId) {
       history.push(`/user/tasks/${activeTaskId}`);
@@ -34,9 +34,14 @@ const Header: React.FC<HeaderProps> = ({ user, handleLogout }) => {
       {user ? (
         <div>
           {user?.type === 'writer' && user?.status === AccountStatus.ACTIVATED && (
-            <button type='button' className='btn btn-warning' onClick={startPublish}>
-              Publish
-            </button>
+            <>
+              <button type='button' className='btn btn-warning m-3' onClick={startProcess('publishBook')}>
+                Publish
+              </button>
+              <button type='button' className='btn btn-warning' onClick={startProcess('reportPlagiarism')}>
+                Report plagiarism
+              </button>
+            </>
           )}
           {user?.status === AccountStatus.NOT_PAID && (
             <button type='button' className='btn btn-danger' onClick={goToPayment}>

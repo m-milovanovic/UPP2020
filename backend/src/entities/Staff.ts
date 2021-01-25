@@ -1,7 +1,8 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import StaffRole from './StaffRole';
 
 @Entity()
-export class BoardMember extends BaseEntity {
+export class Staff extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,20 +21,25 @@ export class BoardMember extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  constructor(boardMember?: {
+  @Column({ type: 'enum', enum: StaffRole})
+  role: StaffRole;
+
+  constructor(staff?: {
     firstName: string;
     lastName: string;
     username: string;
     password: string;
     email: string;
+    role: StaffRole;
   }) {
     super();
-    if (boardMember) {
-      this.firstName = boardMember.firstName;
-      this.lastName = boardMember.lastName;
-      this.username = boardMember.username;
-      this.password = boardMember.password;
-      this.email = boardMember.email;
+    if (staff) {
+      this.firstName = staff.firstName;
+      this.lastName = staff.lastName;
+      this.username = staff.username;
+      this.password = staff.password;
+      this.email = staff.email;
+      this.role = staff.role;
     }
   }
 }

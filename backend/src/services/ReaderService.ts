@@ -3,7 +3,6 @@ import { Reader } from '../entities/Reader';
 import bcrypt from 'bcrypt';
 import AccountStatus from '../entities/AccountStatus';
 import CamundaUserService from '../camunda-engine/User';
-import CamundaGroupService from '../camunda-engine/Group';
 import { createCamundaUser } from '../util/requestUtil';
 
 const findByUsername = async (username: string) => {
@@ -13,7 +12,6 @@ const findByUsername = async (username: string) => {
 const save = async (reader: Reader) => {
   const camundaUserRequestData = createCamundaUser(reader);
   await CamundaUserService.create(camundaUserRequestData);
-  await CamundaGroupService.assign('readers', reader.username);
   reader.password = await bcrypt.hash(reader.password, SALT_ROUNDS);
   await reader.save();
 };

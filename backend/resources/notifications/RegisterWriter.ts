@@ -1,8 +1,5 @@
-const createNotificationMail = (subject: string, text: string) => {
-  return {
-    subject: subject,
-    html: `<p>${text}</p>`,
-  };
+const createNotificationMail = (text: string) => {
+  return `<p>${text}</p>`;
 };
 
 export { createNotificationMail };

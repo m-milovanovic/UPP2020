@@ -34,7 +34,7 @@ router.get('/:id/formVariables', async (request, response) => {
   }
   const fieldsObject = await VariableInstance.getVariable(taskID);
   fieldsObject.value = fieldsObject.value.replaceAll('"', '"');
-  const formVariables = tranformStringToFormVariable(fieldsObject.value);
+  const formVariables = await tranformStringToFormVariable(fieldsObject.value);
   response.json(formVariables);
 });
 
@@ -57,7 +57,7 @@ router.post('/:id/complete', async (request, response) => {
   }
   const fieldsObject = await VariableInstance.getVariable(id);
   fieldsObject.value = fieldsObject.value.replaceAll('"', '"');
-  const formVariables = tranformStringToFormVariable(fieldsObject.value);
+  const formVariables = await tranformStringToFormVariable(fieldsObject.value);
   const errors = await ValidationService.validateConstraints(data.variables, formVariables);
   if (Object.keys(errors).length > 0) {
     response.status(400).json(errors);
@@ -67,9 +67,9 @@ router.post('/:id/complete', async (request, response) => {
   }
 });
 
-const tranformStringToFormVariable = (str: string): FormVariable[] => {
+const tranformStringToFormVariable = async (str: string): Promise<FormVariable[]> => {
   const fieldList = JSON.parse(str);
-  let retVal: FormVariable[] = fieldList.map((field) => {
+  let retVal: FormVariable[]= await Promise.all(fieldList.map(async (field) => {
     let constraints: Record<string, string> = {};
     field.validationConstraints.forEach((cons) => (constraints[cons.name] = cons.configuration));
     if (field.properties.pattern) {
@@ -82,17 +82,21 @@ const tranformStringToFormVariable = (str: string): FormVariable[] => {
       ),
       label: <string>field.label,
       constraints: constraints,
-      unique: field.properties.unique,
       value: field.defaultValue,
     };
+    if (field.properties.unique) {
+      variable.unique = field.properties.unique;
+    }
+    if (field.properties.minSize && !isNaN(+field.properties.minSize)) {
+      variable.minSize = +field.properties.minSize;
+    }
     if (field.type.values && Object.keys(field.type.values).length > 0) {
       variable.options = Object.keys(field.type.values);
-    } else if (field.type.values || field.properties.inputType === 'multiselect') {
-      variable.options = EnumService.getOptions(field.properties.options);
+    } else if (field.type.values || field.properties.inputType === 'multiselect' || field.properties.inputType === 'enum') {
+      variable.options = await EnumService.getOptions(field.properties.options);
     }
-
     return variable;
-  });
+  }));
   return retVal;
 };
 

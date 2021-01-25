@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from 'typeorm';
 import AccountStatus from './AccountStatus';
+import { Book } from './Book';
 
 @Entity()
 export class Writer extends BaseEntity {
@@ -21,8 +22,10 @@ export class Writer extends BaseEntity {
   @Column({ unique: true })
   email: string;
 
-  @Column('text', { array: true, default: {} })
-  files: string[];
+  @OneToMany(() => Book, book => book.writer, {
+    cascade: true
+  })
+  books: Book[];
 
   @Column({ type: 'enum', enum: AccountStatus, default: AccountStatus.NOT_ACTIVATED })
   status: AccountStatus;
@@ -36,7 +39,7 @@ export class Writer extends BaseEntity {
     username: string;
     password: string;
     email: string;
-    favoriteGenres: string[]
+    favoriteGenres: string[];
   }) {
     super();
     if (writer) {

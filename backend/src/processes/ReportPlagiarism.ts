@@ -8,21 +8,22 @@ const getDataPlagiarism = () => {
     const mainEditor = await StaffService.findMainEditor();
     variables.set('mainEditor', mainEditor.username);
     variables.set('mainEditorMail', mainEditor.email);
-  
+
     await taskService.complete(task, variables);
-  })
+  });
 };
 
 const getEditorsDataPlagiarism = () => {
-  client.subscribe('getEditorsDataPlagiarism', async function() {
+  client.subscribe('getEditorsDataPlagiarism', async function ({ task, taskService }) {
     const variables = new Variables();
-    variables.set('assignedEditors', []);
-
-    //await taskService.complete(task, variables)
-  })
-}
+    const assignedEditorsUsername = await task.variables.get('editor');
+    const assignedEditor = await StaffService.findEditorByUsername(assignedEditorsUsername);
+    variables.set(`notificationEmail`, assignedEditor.email);
+    await taskService.complete(task, variables);
+  });
+};
 
 export default {
   getDataPlagiarism,
-  getEditorsDataPlagiarism
-}
+  getEditorsDataPlagiarism,
+};

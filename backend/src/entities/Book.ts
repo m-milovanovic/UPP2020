@@ -11,7 +11,15 @@ export class Book extends BaseEntity {
   @Column()
   name: string;
 
+  @Column()
+  extension: string;
+
   @ManyToOne(() => Writer, writer => writer.books)
   writer: Writer;
+
+
+  getFullName(){
+    return this.writer.getFullName() + ' - ' + this.name + '.' + this.extension;
+  }
 
 }

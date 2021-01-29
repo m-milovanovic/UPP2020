@@ -16,6 +16,10 @@ const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 //JWT
 const SECRET = process.env.SECRET;
 
+
+//FILE_PATHS
+const BOOKS_PATH = process.env.BOOK_PATH;
+
 export {
   PORT,
   CAMUNDA_API,
@@ -24,5 +28,6 @@ export {
   MAIL_FROM,
   MAIL_USERNAME,
   MAIL_PASSWORD,
-  SECRET  
+  SECRET,
+  BOOKS_PATH
 }

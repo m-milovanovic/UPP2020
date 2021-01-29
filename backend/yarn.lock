@@ -162,6 +162,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/mime-types@^2.1.0":
+  "integrity" "sha1-nKUs2jY/aZxpRmwqbM2q2RPqenM="
+  "resolved" "https://registry.npmjs.org/@types/mime-types/-/mime-types-2.1.0.tgz"
+  "version" "2.1.0"
+
 "@types/mime@*":
   "integrity" "sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q=="
   "resolved" "https://registry.npmjs.org/@types/mime/-/mime-2.0.3.tgz"
@@ -1771,7 +1776,7 @@
   "resolved" "https://registry.npmjs.org/mime-db/-/mime-db-1.44.0.tgz"
   "version" "1.44.0"
 
-"mime-types@~2.1.24":
+"mime-types@^2.1.27", "mime-types@~2.1.24":
   "integrity" "sha512-JIhqnCasI9yD+SsmkquHBxTSEuZdQX5BuQnS2Vc7puQQQ+8yiP5AY5uWhpdv4YL4VM5c6iliiYWPgJ/nJQLp7w=="
   "resolved" "https://registry.npmjs.org/mime-types/-/mime-types-2.1.27.tgz"
   "version" "2.1.27"

@@ -52,4 +52,8 @@ export class Writer extends BaseEntity {
       this.favoriteGenres = writer.favoriteGenres;
     }
   }
+
+  getFullName () {
+    return this.firstName + ' ' + this.lastName;
+  }
 }

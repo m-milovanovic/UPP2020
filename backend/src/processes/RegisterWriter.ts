@@ -1,11 +1,10 @@
 import { Variables } from 'camunda-external-task-client-js';
 import { createNotificationMail } from '../../resources/notifications/RegisterWriter';
 import client from '../CamundaClient';
-import { Staff } from '../entities/Staff';
 import { Writer } from '../entities/Writer';
-import StaffRole from '../entities/StaffRole';
 import MailService from '../services/MailService';
 import WriterService from '../services/WriterService';
+import StaffService from '../services/StaffService';
 
 const createWriter = () =>
   client.subscribe('createWriter', async function ({ task, taskService }) {
@@ -34,7 +33,7 @@ const confirmWritersMail = () => {
 const getReviewers = () => {
   client.subscribe('getBoardMembers', async function ({ task, taskService }) {
     console.log('Get board members');
-    const boardMembers = await Staff.find({ take: 3, where: { role: StaffRole.BOARD_MEMBER } });
+    const boardMembers = await StaffService.findBoardMembers();
     const variables = new Variables();
     variables.set(
       'boardMembersExt',

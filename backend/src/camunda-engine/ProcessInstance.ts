@@ -7,6 +7,14 @@ const getVariable = async (id: string, varName: string) => {
   return result.data;
 };
 
+const removeVariableList = async (id: string, varList: string[]) => {
+  await axios.post(`${CAMUNDA_API}/process-instance/${id}/variables`, {'deletions': varList});
+}
+
+const removeVariable = async (id: string, varName: string) => {
+  await axios.delete(`${CAMUNDA_API}/process-instance/${id}/variables/${varName}`);
+}
+
 const getByUsername = async (username: string, processKey: string) => {
   const options = createJsonOptions();
   const data = {
@@ -39,6 +47,8 @@ const sendMessage = async (processInstanceId: string, messageName: string): Prom
 
 export default {
   getVariable,
+  removeVariable,
+  removeVariableList,
   sendMessage,
   getByUsername
 };

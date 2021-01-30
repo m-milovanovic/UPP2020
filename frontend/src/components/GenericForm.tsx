@@ -30,13 +30,13 @@ const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, hand
     <div className='row justify-content-between container mx-auto'>
       {formState.additionalData ? (
         <>
-          <div className='col-lg-4 col-md-4 col-sm-12 bg-white p-0'>
+          <div className='col-lg-4 col-md-4 col-xs-12 bg-white p-0'>
             <img src={logo} alt='' className='w-100 float rounded' />
           </div>
           <div className='col bg-white p-3'>
             <GenericAdditionalData additionalData={formState.additionalData} />
           </div>
-          <div className='col-lg-4 col-md-4 col-sm-12 px-4 bg-white'>
+          <div className='col-lg-4 col-md-4 col-xs-12 px-4 bg-white'>
             <form onSubmit={handleSubmit}>
               {fields.map((formField, i) => (
                 <GenericFormField key={i} formField={formField} setFormState={handleSetState} />
@@ -49,10 +49,10 @@ const GenericForm: React.FC<GenericFormProps> = ({ formState, setFormState, hand
         </>
       ) : (
         <>
-          <div className='col-lg-6 col-md-6 col-sm-12 bg-white p-0'>
+          <div className='col-lg-6 col-md-6 col-xs-12 bg-white p-0'>
             <img src={logo} alt='' className='w-100 float rounded' />
           </div>          
-          <div className='col px-4 bg-white'>
+          <div className='col-lg-6 col-md-6 col-xs-12 bg-white'>
             <form onSubmit={handleSubmit}>
               {fields.map((formField, i) => (
                 <GenericFormField key={i} formField={formField} setFormState={handleSetState} />

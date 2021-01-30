@@ -34,11 +34,11 @@ const getReviewers = () => {
   client.subscribe('getBoardMembers', async function ({ task, taskService }) {
     console.log('Get board members');
     const boardMembers = await StaffService.findBoardMembers();
+    console.log('Checkpoint1');
     const variables = new Variables();
-    variables.set(
-      'boardMembersExt',
-      boardMembers.map((bm) => bm.username)
-    );
+    const boardMembersCollection = boardMembers.map((bm) => bm.username);
+    console.log(boardMembersCollection);
+    variables.set('boardMembersExt',boardMembersCollection);
     await taskService.complete(task, variables);
   });
 };
@@ -61,7 +61,7 @@ const sendNotification = () => {
     console.log('-----EMAIL-------');
     console.log('Email:', email);
     console.log('Subject:', subject);
-    console.log('Content', html)
+    console.log('Content', html);
     console.log('-----------------');
     await MailService.send(email, subject, html);
     await taskService.complete(task);

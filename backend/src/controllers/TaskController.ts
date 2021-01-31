@@ -90,10 +90,15 @@ const tranformStringToFormVariable = async (str: string): Promise<FormVariable[]
     if (field.properties.minSize && !isNaN(+field.properties.minSize)) {
       variable.minSize = +field.properties.minSize;
     }
+    if (field.properties.neq) {
+      variable.neq = field.properties.neq;
+    }
     if (field.type.values && Object.keys(field.type.values).length > 0) {
       variable.options = Object.keys(field.type.values);
     } else if (field.type.values || field.properties.inputType === 'multiselect' || field.properties.inputType === 'enum') {
       variable.options = await EnumService.getOptions(field.properties.options);
+    } else if (field.type.values || field.properties.inputType === 'objectMultiselect' || field.properties.inputType === 'objectEnum') {
+      variable.options = await EnumService.getObjectOptions(field.properties.options);
     }
     return variable;
   }));

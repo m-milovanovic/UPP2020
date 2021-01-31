@@ -22,4 +22,7 @@ export class Book extends BaseEntity {
     return this.writer.getFullName() + ' - ' + this.name + '.' + this.extension;
   }
 
+  getFullNameWithoutExt(){
+  return this.writer.getFullName() + ' - ' + this.name;
+  }
 }

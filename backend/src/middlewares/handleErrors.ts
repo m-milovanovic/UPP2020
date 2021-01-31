@@ -7,7 +7,6 @@ export const handleErrors = (err, _req, res, _next) => {
       message: err.message,
     });
   }
-
   return res.status(500).json({
     status: "error",
     message: err.message,

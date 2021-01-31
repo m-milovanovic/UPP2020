@@ -7,6 +7,15 @@ const find = async () => {
   });
 }
 
+const findById = async (id: number) => {
+  return await Book.findOne({
+    where:{
+      id
+    },
+    relations: ['writer']
+  })
+}
+
 const save = async (book: Book) => {
   await book.save();
 }
@@ -14,5 +23,6 @@ const save = async (book: Book) => {
 
 export default {
   find,
+  findById,
   save
 }

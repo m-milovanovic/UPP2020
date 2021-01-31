@@ -58,6 +58,9 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
       case "enum":
         variable.value = (e.target as HTMLSelectElement).value;
         break;
+      case "objectEnum":
+        variable.value = variable.options?.filter( (option) => option.id === +(e.target as HTMLSelectElement).value)[0];
+        break;
       case "file":
         const file = (e.target as HTMLInputElement).files?.[0];
         if (file) {
@@ -229,6 +232,24 @@ const GenericFormField: React.FC<GenericFormFieldProps> = ({
             {options?.map((opt, i) => (
               <option key={`enum-opt-${i}`} value={opt}>
                 {opt}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
+      {inputType === "objectEnum" && (
+        <>
+          <label>{label}</label>
+          <select
+            className="form-select"
+            name={name}
+            onChange={onChange}
+            {...constraints}
+          >
+            <option value=""></option>
+            {options?.map((opt, i) => (
+              <option key={`enum-opt-${i}`} value={opt.id}>
+                {opt.value}
               </option>
             ))}
           </select>

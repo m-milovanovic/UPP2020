@@ -1,5 +1,5 @@
-import BookService from "./BookService";
-import StaffService from "./StaffService";
+import BookService from './BookService';
+import StaffService from './StaffService';
 
 const getOptions = async (resourceKey: string) => {
   switch (true) {
@@ -7,10 +7,12 @@ const getOptions = async (resourceKey: string) => {
       return ['SciFi', 'Economics', 'History'];
     case resourceKey === 'books':
       const books = await BookService.find();
-      return books.map(book => book.name + ': ' + book.writer.firstName + ' ' + book.writer.lastName);
+      return books.map(
+        (book) => book.name + ': ' + book.writer.firstName + ' ' + book.writer.lastName
+      );
     case resourceKey === 'editors':
       const editors = await StaffService.findEditors();
-      return editors.map(editor => editor.username);
+      return editors.map((editor) => editor.username);
     case resourceKey.includes('parsearray'):
       return JSON.parse(resourceKey.split('-', 2)[1]);
     default:
@@ -18,6 +20,19 @@ const getOptions = async (resourceKey: string) => {
   }
 };
 
-const EnumService = { getOptions };
+const getObjectOptions = async (resourceKey: string) => {
+  switch (true) {
+    case resourceKey === 'books':
+      const books = await BookService.find();
+      return books.map((book) => ({
+        id: book.id,
+        value: book.getFullNameWithoutExt()
+      }));
+    default:
+      return [];
+  }
+};
+
+const EnumService = { getOptions, getObjectOptions };
 
 export default EnumService;

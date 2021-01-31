@@ -29,7 +29,7 @@ const TaskForm: React.FC = () => {
         setProcessId(task.processInstanceId);
         if (files.length > 0) {
           formData.additionalData = {
-            type: 'review',
+            type: 'files',
             data: files,
           };
         }

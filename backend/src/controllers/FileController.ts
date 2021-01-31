@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/:id", async (request, response) => {
   try {
     const processId = request.params.id;
-    const variables = await VariableInstance.getVariables("review%", processId);
+    const variables = await VariableInstance.getVariables("%---%", processId);
     response
       .json(
         variables.map((variable) => {

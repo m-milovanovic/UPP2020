@@ -5,7 +5,7 @@ interface GenericAdditionalDataProps {
 }
 
 const GenericAdditionalData: React.FC<GenericAdditionalDataProps> = ({ additionalData }) => {
-  return <div>{additionalData.type === 'review' && <Files files={additionalData.data} />}</div>;
+  return <div>{additionalData.type === 'files' && <Files files={additionalData.data} />}</div>;
 };
 
 export default GenericAdditionalData;

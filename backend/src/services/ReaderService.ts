@@ -6,7 +6,7 @@ import CamundaUserService from '../camunda-engine/User';
 import { createCamundaUser } from '../util/requestUtil';
 
 const findByUsername = async (username: string) => {
-  return await Reader.findOne({username})
+  return await Reader.findOne({ username })
 }
 
 const save = async (reader: Reader) => {
@@ -22,4 +22,21 @@ const activateAccount = async (username: string) => {
   await Reader.save(reader);
 };
 
-export default { findByUsername, save, activateAccount };
+const getBetaReadersByGenre = async (genre: string) => {
+  const readers: Reader[] = await Reader.find()
+  return readers.filter(reader => reader.betaGenres.includes(genre))
+}
+
+const addPenaltyPoint = async (username: string) => {
+  const reader: Reader = await findByUsername(username)
+  reader.penaltyPoints += 1
+  return await Reader.save(reader);
+}
+
+const revokeBetaStatus = async (username) => {
+  const reader: Reader = await findByUsername(username)
+  reader.beta = false
+  return await Reader.save(reader)
+}
+
+export default { findByUsername, save, activateAccount, getBetaReadersByGenre, addPenaltyPoint, revokeBetaStatus };

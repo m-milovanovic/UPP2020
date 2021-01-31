@@ -1,5 +1,7 @@
 import { Variables } from "camunda-external-task-client-js";
 import client from "../CamundaClient";
+import PlagiarismService from "../services/PlagiarismService";
+import ReaderService from "../services/ReaderService";
 
 const getPeople = () => {
   client.subscribe("getPeople", async function ({ task, taskService }) {
@@ -8,7 +10,7 @@ const getPeople = () => {
     variables.set("editor", "board3");
     variables.set("mainEditor", "board3");
     variables.set("lecturer", "board3");
-    variables.set("email", "ftn.milan@gmail.com")
+    variables.set("writerEmail", "ftn.milan@gmail.com")
     await taskService.complete(task, variables);
   });
 };
@@ -26,7 +28,7 @@ const checkForPlagiarism = () => {
     async function ({ task, taskService }) {
       console.log("Check for plagiarsim");
       const variables = new Variables();
-      variables.set("plagiarisedSources", "source1\nsource2\nsource3");
+      variables.set("plagiarisedSources", PlagiarismService.getRandomSouces().join('\n'));
       await taskService.complete(task, variables);
     }
   );
@@ -36,27 +38,21 @@ const getBetaReaders = () => {
   client.subscribe("getBetaReaders", async function ({ task, taskService }) {
     console.log("Get beta readers");
     const variables = new Variables();
-    //TODO: pronaci beta readere po zanru
+    const genre = task.variables.get('genre')
+    const betaReaders = await ReaderService.getBetaReadersByGenre(genre)
     variables.set(
       "betaReaderOptions",
-      '["milanReader","milanReader2","milanReader3"]'
+      JSON.stringify(betaReaders.map(reader => reader.username))
     );
     await taskService.complete(task, variables);
   });
 };
 
-const sendComments = () => {
-  client.subscribe("sendComments", async function ({ task, taskService }) {
-    console.log("Send comments");
-    //TODO: poslati mail
-    await taskService.complete(task);
-  });
-};
-
 const revokeStatus = () => {
   client.subscribe("revokeStatus", async function ({ task, taskService }) {
-    console.log("Revoke status");
-    //TODO: revoke status of beta reader
+    console.log("Revoke status")
+    const betaReaderUsername = task.variables.get("betaReader")
+    await ReaderService.revokeBetaStatus(betaReaderUsername)
     await taskService.complete(task);
   });
 };
@@ -64,8 +60,17 @@ const revokeStatus = () => {
 const addPenaltyPoint = () => {
   client.subscribe("addPenaltyPoint", async function ({ task, taskService }) {
     console.log("Add penalty point");
-    //TODO: add penalty point to beta reader
-    await taskService.complete(task);
+    //TODO: set local variable?
+    const betaReaderUsername = task.variables.get("betaReader")
+    const betaReader = await ReaderService.addPenaltyPoint(betaReaderUsername)
+    const variables = new Variables();
+    if (betaReader.penaltyPoints === 5) {
+      variables.set("revokeStatus", true);
+      variables.set("notificationEmail", betaReader.email);
+      variables.set("notificationTitle", "Beta reader status revoked")
+      variables.set("notificationText", "Your beta reader status has been revoked")
+    }
+    await taskService.complete(task, variables);
   });
 };
 
@@ -82,7 +87,6 @@ export default {
   getPeople,
   checkForPlagiarism,
   getBetaReaders,
-  sendComments,
   revokeStatus,
   addPenaltyPoint,
   addToRepository

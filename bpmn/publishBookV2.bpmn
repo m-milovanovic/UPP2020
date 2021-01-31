@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1cuk2z2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1cuk2z2" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
   <bpmn:collaboration id="publishBookCollab">
     <bpmn:participant id="Participant_1g1slzi" processRef="publishBook" />
   </bpmn:collaboration>
@@ -210,7 +210,7 @@ execution.setVariable("betaReaders", new java.util.ArrayList())
           <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
-execution.setVariable("review",fValue);</camunda:script>
+execution.setVariable(title + "---", fValue);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -369,7 +369,7 @@ execution.setVariable("review",fValue);</camunda:script>
     <bpmn:sequenceFlow id="Flow_0nqccdd" sourceRef="Activity_00gvg6i" targetRef="Event_01ri3bs" />
     <bpmn:sequenceFlow id="Flow_19ai4tm" sourceRef="Activity_1j7vaxv" targetRef="Event_1x44cua" />
     <bpmn:sequenceFlow id="Flow_08lwfzz" name="No suggestions" sourceRef="Gateway_1cjv0pn" targetRef="Activity_1j7vaxv">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${suggestions !@suggestions.isEmpty()}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${suggestions &amp;&amp; !suggestions.isEmpty()}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:boundaryEvent id="Event_1gvylr6" attachedToRef="Activity_0a30muj">
       <bpmn:outgoing>Flow_09f75jn</bpmn:outgoing>
@@ -412,7 +412,7 @@ execution.setVariable("notificationText", java.lang.String.join('&lt;br/&gt;', a
           <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
-execution.setVariable("review",fValue);</camunda:script>
+execution.setVariable(title + "---", fValue);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -465,7 +465,7 @@ execution.setVariable("review",fValue);</camunda:script>
           <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
-execution.setVariable("review",fValue);</camunda:script>
+execution.setVariable(title + "---", fValue);</camunda:script>
         </camunda:executionListener>
         <camunda:taskListener event="create">
           <camunda:script scriptFormat="JavaScript" resource="registerTaskFormData.js" />
@@ -546,7 +546,7 @@ execution.setVariable("review",fValue);</camunda:script>
           <camunda:script scriptFormat="JavaScript">var paper = execution.getVariableTyped("paper")
 
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(paper.getFilename()).file(paper.getValue()).mimeType(paper.getMimeType()).encoding(paper.getEncoding()).create();
-execution.setVariable("review",fValue);</camunda:script>
+execution.setVariable(title + "---", fValue);</camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_0tw1mn5</bpmn:incoming>
@@ -690,7 +690,7 @@ var fn= annotated.getFilename().split(".", 2)
 var fileName = fn[0]+"_annotated."+fn[1]
 
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(fileName).file(annotated .getValue()).mimeType(annotated.getMimeType()).encoding(annotated.getEncoding()).create();
-execution.setVariable("review_annotated",fValue);
+execution.setVariable(title + " - annotated---",fValue);
 }</camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
@@ -815,7 +815,7 @@ lecturer</bpmn:text>
         <di:waypoint x="4225" y="410" />
         <di:waypoint x="4310" y="410" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="4222" y="392" width="77" height="14" />
+          <dc:Bounds x="4223" y="392" width="76" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_19ai4tm_di" bpmnElement="Flow_19ai4tm">

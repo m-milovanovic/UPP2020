@@ -33,6 +33,13 @@ const Header: React.FC<HeaderProps> = ({ user, handleLogout }) => {
       </Link>
       {user ? (
         <div>
+          {user?.type && user?.type !== 'writer' && (
+            <>
+              <button type='button' className='btn btn-warning' onClick={startProcess('reportPlagiarism')}>
+                Report plagiarism
+              </button>
+            </>
+          )}
           {user?.type === 'writer' && user?.status === AccountStatus.ACTIVATED && (
             <>
               <button type='button' className='btn btn-warning m-3' onClick={startProcess('publishBook')}>

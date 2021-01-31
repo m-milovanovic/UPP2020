@@ -324,10 +324,6 @@ task.execution.setVariable(editor+"'s notes---", fValue);</camunda:script>
       <bpmn:incoming>Flow_0ukpw0k</bpmn:incoming>
       <bpmn:outgoing>Flow_1l3i9i9</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:textAnnotation id="TextAnnotation_1empr9j">
-      <bpmn:text>TODO: provera da su knjige različite</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_03phiyr" sourceRef="Activity_0uubt7j" targetRef="TextAnnotation_1empr9j" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1tcm73m">
@@ -530,13 +526,6 @@ task.execution.setVariable(editor+"'s notes---", fValue);</camunda:script>
       <bpmndi:BPMNShape id="Activity_08cva0k_di" bpmnElement="Activity_1ii2st6">
         <dc:Bounds x="2235" y="1100" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_1empr9j_di" bpmnElement="TextAnnotation_1empr9j">
-        <dc:Bounds x="465" y="130" width="219.9893439584878" height="25.945144551519643" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_03phiyr_di" bpmnElement="Association_03phiyr">
-        <di:waypoint x="467" y="190" />
-        <di:waypoint x="503" y="156" />
-      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_18q7i8s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_18q7i8s" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.5.0">
   <bpmn:process id="registerWriter" isExecutable="true">
     <bpmn:serviceTask id="Activity_063u3qz" name="Create writer" camunda:type="external" camunda:topic="createWriter">
       <bpmn:incoming>Flow_147xv4s</bpmn:incoming>
@@ -23,7 +23,7 @@ var paper = execution.getVariable("papers")
 
 for(var i=counter; i &lt; papers.length + counter; i++){
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(papers[i-counter].valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(papers[i-counter].value))).mimeType(papers[i-counter].valueInfo.mimetype).encoding(papers[i-counter].valueInfo.encoding).create();
-execution.setVariable("review" + i, fValue);
+execution.setVariable("paper" + i + "---", fValue);
 }
 execution.setVariable("counter", i);</camunda:script>
         </camunda:executionListener>
@@ -137,7 +137,7 @@ var paper = execution.getVariable("papers")
 
 for(var i=counter; i &lt; papers.length + counter; i++){
 var fValue = org.camunda.bpm.engine.variable.Variables.fileValue(papers[i-counter].valueInfo.filename).file(new java.io.ByteArrayInputStream(java.util.Base64.getDecoder().decode(papers[i-counter].value))).mimeType(papers[i-counter].valueInfo.mimetype).encoding(papers[i-counter].valueInfo.encoding).create();
-execution.setVariable("review" + i, fValue);
+execution.setVariable("paper" + i + "---", fValue);
 }
 execution.setVariable("counter", i);</camunda:script>
           </camunda:executionListener>

@@ -17,7 +17,8 @@ const save = async (writer: Writer) => {
 };
 
 const remove = async (username: string) => {
-  await Writer.delete({ username});
+  const deleteResult = await Writer.delete({ username });
+  console.log(deleteResult)
   await CamundaUserService.remove(username);
 }
 

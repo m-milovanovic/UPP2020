@@ -38,7 +38,7 @@ const getReviewers = () => {
     const variables = new Variables();
     const boardMembersCollection = boardMembers.map((bm) => bm.username);
     console.log(boardMembersCollection);
-    variables.set('boardMembersExt',boardMembersCollection);
+    variables.set('boardMembersExt', boardMembersCollection);
     await taskService.complete(task, variables);
   });
 };

@@ -9,7 +9,7 @@ const find = async () => {
 
 const findById = async (id: number) => {
   return await Book.findOne({
-    where:{
+    where: {
       id
     },
     relations: ['writer']
@@ -17,7 +17,7 @@ const findById = async (id: number) => {
 }
 
 const save = async (book: Book) => {
-  await book.save();
+  return await book.save();
 }
 
 

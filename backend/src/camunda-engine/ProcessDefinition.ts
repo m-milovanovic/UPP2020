@@ -3,7 +3,6 @@ import { CAMUNDA_API } from '../config/config';
 import { createJsonOptions } from '../util/requestUtil';
 
 const startProcessInstance = async (key: string) => {
-  console.log(CAMUNDA_API);
   const options = createJsonOptions();
   const result = await axios.post(
     `${CAMUNDA_API}/process-definition/key/${key}/start`,

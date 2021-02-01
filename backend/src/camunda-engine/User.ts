@@ -5,7 +5,8 @@ const create = async (data: any) => {
   await axios.post(`${CAMUNDA_API}/user/create`, data);
 };
 
-const remove = async (username: any) => {
+const remove = async (username: string) => {
+  console.log("DELETE", username)
   await axios.delete(`${CAMUNDA_API}/user/${username}`);
 }
 

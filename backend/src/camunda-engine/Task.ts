@@ -3,7 +3,6 @@ import { CAMUNDA_API } from '../config/config';
 import { createJsonOptions } from '../util/requestUtil';
 
 const getTask = async (processID: string, assignee: string) => {
-  console.log(CAMUNDA_API);
   const options = createJsonOptions();
   const data = {
     processInstanceId: processID,
@@ -14,7 +13,6 @@ const getTask = async (processID: string, assignee: string) => {
 };
 
 const getTaskById = async (taskId: string) => {
-  console.log(CAMUNDA_API);
   const options = createJsonOptions();
   const result = await axios.get(`${CAMUNDA_API}/task/${taskId}`, options);
   return result.data;
@@ -27,7 +25,6 @@ const complete = async (taskID: string, data: any) => {
 };
 
 const getAssignedTasks = async (username: string) => {
-  console.log(CAMUNDA_API);
   const options = createJsonOptions();
   const data = {
     assignee: username,

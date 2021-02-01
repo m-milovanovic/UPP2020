@@ -18,11 +18,24 @@ export class Book extends BaseEntity {
   writer: Writer;
 
 
-  getFullName(){
+  getFullName() {
     return this.writer.getFullName() + ' - ' + this.name + '.' + this.extension;
   }
 
-  getFullNameWithoutExt(){
-  return this.writer.getFullName() + ' - ' + this.name;
+  getFullNameWithoutExt() {
+    return this.writer.getFullName() + ' - ' + this.name;
+  }
+
+  constructor(book?: {
+    name: string,
+    extension: string,
+    writer: Writer
+  }) {
+    super();
+    if (book) {
+      this.name = book.name;
+      this.extension = book.extension;
+      this.writer = book.writer
+    }
   }
 }

@@ -1,3 +1,4 @@
+import deepEqual from 'deep-equal';
 import { FormVariable } from '../types';
 import resolveTable from '../util/resolveTable';
 
@@ -63,16 +64,32 @@ const validateConstraints = async (data: any, variables: FormVariable[]) => {
         errors[varName] = `${varName} ${varValue} already exists`;
       }
     }
+    if (variable.neq) {
+      const variableValue = data[variable.name]?.value;
+      if(data[variable.neq] && deepEqual(data[variable.neq].value, variableValue)){
+        errors[variable.name] = `${variable.name}'s value must be different than ${variable.neq}'s value`;
+      }
+    }
     if (variable.options) {
       const value = data[variable.name]?.value;
+      console.log(variable.name);
       if (Array.isArray(value)) {
         value.forEach((item) => {
           if (!variable.options.includes(item)) {
             errors[variable.name] = `Enum value must be one of [${variable.options}]`;
           }
         });
-      } else if (!variable.options.includes(value)) {
+      } else if (!value.id && !variable.options.includes(value)) {
         errors[variable.name] = `Enum value must be one of [${variable.options}]`;
+      } else if (value.id && !variable.options.map((option) => option.id).includes(value.id)) {
+        errors[variable.name] = `Enum value must be one of [${variable.options.map((option) => option.value)}]`;
+      }
+    }
+    if (variable.minSize) {
+      const value = data[variable.name]?.value;
+      console.log(variable.name);
+      if (!Array.isArray(value) || value.length < variable.minSize) {
+        errors[variable.name] = `Value must have length of ${variable.minSize}`;
       }
     }
   }

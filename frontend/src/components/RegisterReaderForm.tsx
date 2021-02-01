@@ -6,7 +6,10 @@ import TaskService from '../services/TaskService';
 import GenericForm from './GenericForm';
 
 const RegisterReaderForm: React.FC = () => {
-  const [formState, setFormState] = useState<FormVariables>({ variables: {} });
+  const [formState, setFormState] = useState<FormVariables>({
+    variables: {},
+    additionalData: null,
+  });
   const [taskId, setTaskId] = useState<string>('');
   const history = useHistory();
   const [processId, setProcessId] = useState<string>('');
@@ -50,6 +53,7 @@ const RegisterReaderForm: React.FC = () => {
     } catch (error) {
       for (const key in error.response?.data) {
         setFormState({
+          ...formState,
           variables: {
             ...formState.variables,
             [key]: { ...formState.variables[key], error: error.response.data[key] },

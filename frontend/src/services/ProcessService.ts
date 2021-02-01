@@ -1,7 +1,7 @@
 import Axios from 'axios';
 
-const startProcess = async (processKey: string): Promise<string> => {
-  let response = await Axios.get(`${process.env.REACT_APP_API_URL}/processes/${processKey}/start`);
+const startProcess = async (processKey: string, username?: string): Promise<string> => {
+  let response = await Axios.get(`${process.env.REACT_APP_API_URL}/processes/${processKey}/start?username=${username}`);
   let processId = response.data;
   return processId;
 };

@@ -1,5 +1,6 @@
 export interface FormVariables {
   variables: Record<string, FormVariable>;
+  additionalData: any;
 }
 
 export type FormVariable = {
@@ -16,7 +17,7 @@ export type FormVariable = {
 
 type ValueInfo = {
   filename: string;
-  mimetype: string;
+  mimeType: string;
   encoding: string;
 };
 

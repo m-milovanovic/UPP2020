@@ -2,7 +2,6 @@ import { Writer } from '../entities/Writer';
 import bcrypt from 'bcrypt';
 import { createCamundaUser } from '../util/requestUtil';
 import CamundaUserService from '../camunda-engine/User';
-import CamundaGroupService from '../camunda-engine/Group';
 import { SALT_ROUNDS } from '../config/config';
 import AccountStatus from '../entities/AccountStatus';
 
@@ -13,10 +12,15 @@ const findByUsername = async (username: string) => {
 const save = async (writer: Writer) => {
   const camundaUserRequestData = createCamundaUser(writer);
   await CamundaUserService.create(camundaUserRequestData);
-  await CamundaGroupService.assign('writers', writer.username);
   writer.password = await bcrypt.hash(writer.password, SALT_ROUNDS);
   await writer.save();
 };
+
+const remove = async (username: string) => {
+  const deleteResult = await Writer.delete({ username });
+  console.log(deleteResult)
+  await CamundaUserService.remove(username);
+}
 
 const confirmWritersMail = async (username: string) => {
   const writer: Writer = await Writer.findOne({ username });
@@ -45,6 +49,7 @@ const confirmWritersPayment = async (username: string) => {
 export default {
   findByUsername,
   save,
+  remove,
   confirmWritersMail,
   approveWriter,
   declineWriter,

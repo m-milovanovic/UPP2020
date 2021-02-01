@@ -7,4 +7,6 @@ export interface FormVariable {
   constraints: Constraints;
   options?: any[];
   unique?: string;
+  neq?: string;
+  minSize?: number;
 }

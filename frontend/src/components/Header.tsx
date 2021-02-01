@@ -1,22 +1,30 @@
 import { Link, useHistory } from 'react-router-dom';
 import { AccountStatus } from '../interfaces';
-import LocalStorageService from '../services/LocalStorageService';
+import ProcessService from '../services/ProcessService';
 
 interface HeaderProps {
   user: any;
-  setUser: any;
+  handleLogout: any;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
-  const history = useHistory();
+const Header: React.FC<HeaderProps> = ({ user, handleLogout }) => {
+  const history = useHistory();  
 
-  const handleLogout = () => {
-    LocalStorageService.removeJwt();
-    setUser(null);
-    history.push('/login');
+  const goToPayment = () => {
+    history.push('/payment');
   };
 
-  console.log(user);
+  const startProcess = (processName: string) => async () =>{
+    const processId = await ProcessService.startProcess(processName, user.username);
+    const activeTaskId = await ProcessService.getActiveTaskId(processId);
+    if (activeTaskId) {
+      history.push(`/user/tasks/${activeTaskId}`);
+    } else {
+      history.push('/user');
+    }
+  };
+
+  
 
   return (
     <nav className='navbar navbar-dark bg-primary justify-content-between p-2'>
@@ -25,8 +33,25 @@ const Header: React.FC<HeaderProps> = ({ user, setUser }) => {
       </Link>
       {user ? (
         <div>
+          {user?.type && user?.type !== 'writer' && (
+            <>
+              <button type='button' className='btn btn-warning' onClick={startProcess('reportPlagiarism')}>
+                Report plagiarism
+              </button>
+            </>
+          )}
+          {user?.type === 'writer' && user?.status === AccountStatus.ACTIVATED && (
+            <>
+              <button type='button' className='btn btn-warning m-3' onClick={startProcess('publishBook')}>
+                Publish
+              </button>
+              <button type='button' className='btn btn-warning' onClick={startProcess('reportPlagiarism')}>
+                Report plagiarism
+              </button>
+            </>
+          )}
           {user?.status === AccountStatus.NOT_PAID && (
-            <button type='button' className='btn btn-warning'>
+            <button type='button' className='btn btn-danger' onClick={goToPayment}>
               Pay subscription
             </button>
           )}

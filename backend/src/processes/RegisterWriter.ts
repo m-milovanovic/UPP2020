@@ -1,8 +1,10 @@
 import { Variables } from 'camunda-external-task-client-js';
+import { createNotificationMail } from '../../resources/notifications/RegisterWriter';
 import client from '../CamundaClient';
-import { BoardMember } from '../entities/BoardMember';
 import { Writer } from '../entities/Writer';
+import MailService from '../services/MailService';
 import WriterService from '../services/WriterService';
+import StaffService from '../services/StaffService';
 
 const createWriter = () =>
   client.subscribe('createWriter', async function ({ task, taskService }) {
@@ -31,12 +33,12 @@ const confirmWritersMail = () => {
 const getReviewers = () => {
   client.subscribe('getBoardMembers', async function ({ task, taskService }) {
     console.log('Get board members');
-    const boardMembers = await BoardMember.find({ take: 3 });
+    const boardMembers = await StaffService.findBoardMembers();
+    console.log('Checkpoint1');
     const variables = new Variables();
-    variables.set(
-      'boardMembersExt',
-      boardMembers.map((bm) => bm.username)
-    );
+    const boardMembersCollection = boardMembers.map((bm) => bm.username);
+    console.log(boardMembersCollection);
+    variables.set('boardMembersExt', boardMembersCollection);
     await taskService.complete(task, variables);
   });
 };
@@ -52,7 +54,16 @@ const approveWriter = () => {
 
 const sendNotification = () => {
   client.subscribe('sendNotification', async function ({ task, taskService }) {
-    console.log('Send notification');
+    const email = task.variables.get('notificationEmail');
+    const subject = task.variables.get('notificationSubject');
+    const notificationText = task.variables.get('notificationText');
+    const html = createNotificationMail(notificationText);
+    console.log('-----EMAIL-------');
+    console.log('Email:', email);
+    console.log('Subject:', subject);
+    console.log('Content', html);
+    console.log('-----------------');
+    await MailService.send(email, subject, html);
     await taskService.complete(task);
   });
 };
@@ -60,6 +71,17 @@ const sendNotification = () => {
 const deactivateWriter = () => {
   client.subscribe('deactivateWriter', async function ({ task, taskService }) {
     console.log('Deactivate writer');
+    const username = task.variables.get('username');
+    await WriterService.remove(username);
+    await taskService.complete(task);
+  });
+};
+
+const confirmWritersPayment = () => {
+  client.subscribe('confirmWritersPayment', async function ({ task, taskService }) {
+    console.log('Confirm writers payment');
+    const username = task.variables.get('username');
+    await WriterService.confirmWritersPayment(username);
     await taskService.complete(task);
   });
 };
@@ -71,4 +93,5 @@ export default {
   approveWriter,
   sendNotification,
   deactivateWriter,
+  confirmWritersPayment,
 };

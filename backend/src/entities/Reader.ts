@@ -33,6 +33,9 @@ export class Reader extends BaseEntity {
   @Column({ type: 'enum', enum: AccountStatus, default: AccountStatus.NOT_ACTIVATED })
   status: AccountStatus;
 
+  @Column({ default: 0 })
+  penaltyPoints: number;
+
   constructor(reader?: {
     firstName: string;
     lastName: string;
@@ -56,6 +59,7 @@ export class Reader extends BaseEntity {
         this.betaGenres = reader.genres;
       }
       this.status = AccountStatus.NOT_ACTIVATED;
+      this.penaltyPoints = 0
     }
   }
 }

@@ -72,7 +72,7 @@ const deactivateWriter = () => {
   client.subscribe('deactivateWriter', async function ({ task, taskService }) {
     console.log('Deactivate writer');
     const username = task.variables.get('username');
-    await WriterService.declineWriter(username);
+    await WriterService.remove(username);
     await taskService.complete(task);
   });
 };

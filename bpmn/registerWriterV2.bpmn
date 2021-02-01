@@ -164,7 +164,11 @@ execution.setVariable("counter", i);</camunda:script>
       <bpmn:serviceTask id="Activity_0klzp9v" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
         <bpmn:extensionElements>
           <camunda:executionListener event="start">
-            <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "Some members of the review board have asked for more of your works. Please upload more works to continue your registration process. You have a two week deadline.");</camunda:script>
+            <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "Some members of the review board have asked for more of your works. Please upload more works to continue your registration process. You have a two week deadline.");
+
+execution.setVariable("notificationEmail", email);
+
+execution.setVariable("notificationSubject", "Registration: board members asked for more papers");</camunda:script>
           </camunda:executionListener>
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0arcles</bpmn:incoming>
@@ -228,7 +232,11 @@ execution.setVariable("counter", i);</camunda:script>
     <bpmn:serviceTask id="Activity_1jkukz4" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
-          <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "Your application to our association has been approved! Please pay your subscription fee to complete the registration process. You have a two week deadline.");</camunda:script>
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "Your application to our association has been approved! Please pay your subscription fee to complete the registration process. You have a two week deadline.");
+
+execution.setVariable("notificationEmail", email);
+
+execution.setVariable("notificationSubject", "Registration: you have been approved");</camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1g10izv</bpmn:incoming>
@@ -241,7 +249,11 @@ execution.setVariable("counter", i);</camunda:script>
     <bpmn:serviceTask id="Activity_14s27xu" name="Send notification" camunda:type="external" camunda:topic="sendNotification">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
-          <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "We are sad to inform you that you have been rejected from the literary association.");</camunda:script>
+          <camunda:script scriptFormat="JavaScript">execution.setVariable("notificationText", "We are sad to inform you that you have been rejected from the literary association.");
+
+execution.setVariable("notificationEmail", email);
+
+execution.setVariable("notificationSubject", "Registration: your application has been rejected");</camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1b7slwa</bpmn:incoming>

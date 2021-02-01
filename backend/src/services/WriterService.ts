@@ -16,6 +16,11 @@ const save = async (writer: Writer) => {
   await writer.save();
 };
 
+const remove = async (username: string) => {
+  await Writer.delete({ username});
+  await CamundaUserService.remove(username);
+}
+
 const confirmWritersMail = async (username: string) => {
   const writer: Writer = await Writer.findOne({ username });
   writer.status = AccountStatus.NOT_APPROVED;
@@ -43,6 +48,7 @@ const confirmWritersPayment = async (username: string) => {
 export default {
   findByUsername,
   save,
+  remove,
   confirmWritersMail,
   approveWriter,
   declineWriter,

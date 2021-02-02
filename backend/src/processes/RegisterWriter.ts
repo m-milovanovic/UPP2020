@@ -21,6 +21,15 @@ const createWriter = () =>
     await taskService.complete(task);
   });
 
+const cleanupWriter = () => {
+  client.subscribe('cleanupWriter', async function ({ task, taskService }) {
+    const writer = await WriterService.findByUsername(task.variables.get("username"))
+    if (writer)
+      WriterService.remove(writer.username)
+    await taskService.complete(task);
+  })
+}
+
 const confirmWritersMail = () => {
   client.subscribe('confirmWritersMail', async function ({ task, taskService }) {
     console.log('Confirm writers mail');
@@ -88,6 +97,7 @@ const confirmWritersPayment = () => {
 
 export default {
   createWriter,
+  cleanupWriter,
   confirmWritersMail,
   getReviewers,
   approveWriter,

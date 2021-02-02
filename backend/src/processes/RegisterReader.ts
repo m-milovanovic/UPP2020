@@ -5,7 +5,7 @@ import { Reader } from '../entities/Reader';
 import { createActivationMail } from '../../resources/notifications/RegisterReader';
 import { FRONTEND_URL } from '../config/config';
 
-const createReader = () =>
+const createReader = () => {
   client.subscribe('createReader', async function ({ task, taskService }) {
     let reader: Reader = new Reader({
       firstName: task.variables.get('firstName'),
@@ -22,6 +22,16 @@ const createReader = () =>
     ReaderService.save(reader);
     await taskService.complete(task);
   });
+}
+
+const cleanupReader = () => {
+  client.subscribe('cleanupReader', async function ({ task, taskService }) {
+    const reader = await ReaderService.findByUsername(task.variables.get("username"))
+    if (reader)
+      ReaderService.remove(reader.username)
+    await taskService.complete(task);
+  })
+}
 
 const sendActivation = () => {
   client.subscribe('sendActivation', async function ({ task, taskService }) {
@@ -46,4 +56,5 @@ export default {
   createReader,
   sendActivation,
   activateReader,
+  cleanupReader
 };

@@ -39,4 +39,9 @@ const revokeBetaStatus = async (username) => {
   return await Reader.save(reader)
 }
 
-export default { findByUsername, save, activateAccount, getBetaReadersByGenre, addPenaltyPoint, revokeBetaStatus };
+const remove = async (username) => {
+  await Reader.delete({ username });
+  await CamundaUserService.remove(username);
+}
+
+export default { findByUsername, save, activateAccount, getBetaReadersByGenre, addPenaltyPoint, revokeBetaStatus, remove };

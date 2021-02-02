@@ -20,16 +20,11 @@ const getPeople = () => {
     variables.set("mainEditor", mainEditor.username);
     variables.set("lecturer", lecturer.username);
     variables.set("writerEmail", writer.email)
+    variables.set('mainEditorEmail', mainEditor.email);
     await taskService.complete(task, variables);
   });
 };
 
-const notifyMainEditor = () => {
-  client.subscribe("notifyMainEditor", async function ({ task, taskService }) {
-    console.log("Notify main editor");
-    await taskService.complete(task);
-  });
-};
 
 const checkForPlagiarism = () => {
   client.subscribe(
@@ -112,7 +107,6 @@ const download = (url, dest, cb) => {
 
 
 export default {
-  notifyMainEditor,
   getPeople,
   checkForPlagiarism,
   getBetaReaders,

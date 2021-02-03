@@ -79,9 +79,9 @@ const validateConstraints = async (data: any, variables: FormVariable[]) => {
             errors[variable.name] = `Enum value must be one of [${variable.options}]`;
           }
         });
-      } else if (!value.id && !variable.options.includes(value)) {
+      } else if (value && !value?.id && !variable.options.includes(value)) {
         errors[variable.name] = `Enum value must be one of [${variable.options}]`;
-      } else if (value.id && !variable.options.map((option) => option.id).includes(value.id)) {
+      } else if (value && value?.id && !variable.options.map((option) => option.id).includes(value.id)) {
         errors[variable.name] = `Enum value must be one of [${variable.options.map((option) => option.value)}]`;
       }
     }
